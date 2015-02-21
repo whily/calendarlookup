@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+  <string name="app_name">Calendar Lookup</string>
+  
+  <!--  SearchActivity -->
+  <string name="settings">Settings</string>
+  <string name="about">About</string>  
+  <string name="search_entry_hint">1.1.1</string>
+  
+  <!--  Activity Settings -->
+  <string name="appearance_preference">Appearance</string>
+  <string name="theme_title_preference">Theme</string>
+  <string name="theme_dialog_title_preference">Theme</string>
+  <string-array name="theme_entries_preference">
+    <item>Dark</item>
+  	<item>Light</item>
+  </string-array>
+  <string-array name="theme_values_preference">
+    <item>0</item> 
+    <item>1</item> 
+  </string-array>
+  <string name="language_title_preference">Language for metro info</string>
+  <string name="language_dialog_title_preference">Language</string>
+  <string-array name="language_entries_preference">
+    <item>Simplified Chinese</item>
+    <item>Traditional Chinese</item>
+  </string-array>
+  <string-array name="language_values_preference">
+    <item>simplified</item> 
+    <item>traditional</item> 
+  </string-array>
+    
+  <!-- Activity About -->
+  <string name="whats_new">What\'s new</string>
+  <string name="changelog">Changelog</string>
+  <string name="help_and_faq">Help &amp; FAQ</string>
+  <string name="other_programs">Other programs</string>
+  <string name="about_html">
+    <![CDATA[
+    <html>
+      <body>
+        <center><h3>Calendar Lookup v0.0.1</h3></center>
+        <center><h4>Copyright &copy; 2013 Yujian Zhang</h4></center>
+        <center><h4>License: <a href="http://www.gnu.org/licenses/gpl-2.0.html">GNU General Public License v2</a></h4></center>
+      </body>
+    </html>
+    ]]>
+  </string>  
+</resources>
