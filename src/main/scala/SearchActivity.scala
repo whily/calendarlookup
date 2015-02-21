@@ -34,7 +34,6 @@ class SearchActivity extends Activity {
 
     Misc.setMaterialTheme(this)
     setContentView(R.layout.search)
-    setTitle("")
     
     bar = getActionBar
     bar.setHomeButtonEnabled(true)
