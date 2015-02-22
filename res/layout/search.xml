@@ -14,5 +14,14 @@
     android:hint="@string/search_entry_hint"
     android:imeOptions="actionGo"
     android:textSize="@dimen/edit_text_size_medium"
-    android:inputType="text" />    
+    android:inputType="text" />
+  <TextView 
+    android:id="@+id/result"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:paddingBottom="@dimen/textview_vertical_margin"
+    android:paddingLeft="@dimen/textview_horizontal_margin_large"
+    android:paddingRight="@dimen/textview_horizontal_margin_large"
+    android:paddingTop="@dimen/textview_vertical_margin"  	
+    android:textSize="@dimen/edit_text_size_medium" />
 </LinearLayout>

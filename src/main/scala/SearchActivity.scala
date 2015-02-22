@@ -15,15 +15,17 @@ import scala.collection.mutable
 import android.app.{ActionBar, Activity}
 import android.content.Intent
 import android.os.Bundle
-import android.view.{Menu, MenuItem, MotionEvent, View}
+import android.view.{KeyEvent, Menu, MenuItem, MotionEvent, View}
 import android.view.inputmethod.InputMethodManager
 import android.util.{Log, TypedValue}
 import android.widget.{AdapterView, ArrayAdapter, AutoCompleteTextView, ExpandableListView, SimpleAdapter, TextView}
 import net.whily.scaland.{ExceptionHandler, Util}
+import net.whily.chinesecalendar.ChineseCalendar._
 
 class SearchActivity extends Activity {
   private var bar: ActionBar = null
   private var searchEntry: AutoCompleteTextView = null
+  private var resultText: TextView = null  
   private val ResultSettings = 1
   
   override def onCreate(icicle: Bundle) { 
@@ -70,6 +72,10 @@ class SearchActivity extends Activity {
   // Initialize the widgets. The contents are initialized in `initContent`.
   private def initWidgets() {
     val editTextSize = Util.getEditTextSize(this)
+
+    resultText = findViewById(R.id.result).asInstanceOf[TextView]
+    resultText.setTextSize(TypedValue.COMPLEX_UNIT_SP, editTextSize)
+
     searchEntry = findViewById(R.id.search_entry).asInstanceOf[AutoCompleteTextView]
     searchEntry.setThreshold(1)
     searchEntry.setTextSize(TypedValue.COMPLEX_UNIT_SP, editTextSize)
@@ -77,6 +83,17 @@ class SearchActivity extends Activity {
       override def onTouch(v: View, e: MotionEvent): Boolean = {
       	searchEntry.showDropDown()
       	false
+      }
+    })
+    searchEntry.setOnKeyListener(new View.OnKeyListener() {
+      override def onKey(v: View,  keyCode: Int, event: KeyEvent): Boolean = {
+        val searchText = searchEntry.getText().toString
+        try {
+          resultText.setText(toDate(searchText).toString())
+        } catch {
+          case ex: Exception => None
+        }
+        true
       }
     })
   }
