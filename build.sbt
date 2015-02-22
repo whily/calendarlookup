@@ -17,8 +17,7 @@ platformTarget in Android := "android-21"
 
 proguardCache in Android ++= Seq(
   ProguardCache("scasci") % "net.whily" %% "scasci",
-  ProguardCache("scaland") % "net.whily" %% "scaland",
-  ProguardCache("chinesecalendar") % "net.whily" %% "chinesecalendar")
+  ProguardCache("scaland") % "net.whily" %% "scaland")
 
 proguardOptions in Android ++= Seq(
   "-dontobfuscate",
@@ -27,6 +26,7 @@ proguardOptions in Android ++= Seq(
   "-dontwarn scala.collection.**",
   "-dontwarn sun.misc.Unsafe",
   "-keep class net.whily.android.calendarlookup.** { *; }",
+  "-keep class net.whily.android.chinesecalendar.** { *; }",  
   "-keep class scala.collection.SeqLike { public java.lang.String toString(); }")
 
 scalacOptions in Compile ++= Seq("-feature", "-deprecation", "-Xexperimental")
