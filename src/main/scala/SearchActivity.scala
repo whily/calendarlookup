@@ -71,14 +71,10 @@ class SearchActivity extends Activity {
   
   // Initialize the widgets. The contents are initialized in `initContent`.
   private def initWidgets() {
-    val editTextSize = Util.getEditTextSize(this)
-
     resultText = findViewById(R.id.result).asInstanceOf[TextView]
-    resultText.setTextSize(TypedValue.COMPLEX_UNIT_SP, editTextSize)
 
     searchEntry = findViewById(R.id.search_entry).asInstanceOf[AutoCompleteTextView]
     searchEntry.setThreshold(1)
-    searchEntry.setTextSize(TypedValue.COMPLEX_UNIT_SP, editTextSize)
     searchEntry.setOnTouchListener(new View.OnTouchListener() {
       override def onTouch(v: View, e: MotionEvent): Boolean = {
       	searchEntry.showDropDown()
@@ -93,7 +89,7 @@ class SearchActivity extends Activity {
         } catch {
           case ex: Exception => None
         }
-        true
+        false
       }
     })
   }

@@ -9,5 +9,5 @@
   <dimen name="textview_vertical_margin">8dp</dimen>
   
   <!--  Text size -->
-  <dimen name="edit_text_size_medium">18sp</dimen>
+  <dimen name="edit_text_size_medium">19sp</dimen>
 </resources>
