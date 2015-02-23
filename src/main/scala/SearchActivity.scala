@@ -15,10 +15,11 @@ import scala.collection.mutable
 import android.app.{ActionBar, Activity}
 import android.content.Intent
 import android.os.Bundle
-import android.view.{KeyEvent, Menu, MenuItem, MotionEvent, View}
+import android.text.{Editable, TextWatcher}
+import android.view.{Menu, MenuItem, MotionEvent, View}
 import android.view.inputmethod.InputMethodManager
 import android.util.{Log, TypedValue}
-import android.widget.{AdapterView, ArrayAdapter, AutoCompleteTextView, ExpandableListView, SimpleAdapter, TextView}
+import android.widget.{AdapterView, ArrayAdapter, AutoCompleteTextView, TextView}
 import net.whily.scaland.{ExceptionHandler, Util}
 import net.whily.chinesecalendar.ChineseCalendar._
 
@@ -81,15 +82,19 @@ class SearchActivity extends Activity {
       	false
       }
     })
-    searchEntry.setOnKeyListener(new View.OnKeyListener() {
-      override def onKey(v: View,  keyCode: Int, event: KeyEvent): Boolean = {
-        val searchText = searchEntry.getText().toString
+    searchEntry.addTextChangedListener(new TextWatcher() {
+      override def afterTextChanged(s: Editable) {
         try {
-          resultText.setText(toDate(searchText).toString())
+          resultText.setText(toDate(s.toString()).toString())
         } catch {
-          case ex: Exception => None
+          case ex: Exception => resultText.setText("......")
         }
-        false
+      }
+
+      override def beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {
+      }
+
+      override def onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
       }
     })
   }
