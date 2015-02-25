@@ -22,6 +22,7 @@ import android.util.{Log, TypedValue}
 import android.widget.{AdapterView, ArrayAdapter, AutoCompleteTextView, TextView}
 import net.whily.scaland.{ExceptionHandler, Util}
 import net.whily.chinesecalendar.ChineseCalendar._
+import net.whily.chinesecalendar.Chinese._
 
 class SearchActivity extends Activity {
   private var bar: ActionBar = null
@@ -85,7 +86,7 @@ class SearchActivity extends Activity {
     searchEntry.addTextChangedListener(new TextWatcher() {
       override def afterTextChanged(s: Editable) {
         try {
-          resultText.setText(toDate(s.toString()).toString())
+          resultText.setText(toDate(Simplified2Traditional(s.toString())).toString())
         } catch {
           case ex: Exception => resultText.setText("......")
         }
