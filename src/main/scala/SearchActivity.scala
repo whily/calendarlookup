@@ -102,7 +102,8 @@ class SearchActivity extends Activity {
   
   // Initialize the contents of the widgets.
   private def initContents() {
-    searchEntry.setAdapter(new CalendarArrayAdapter(this, R.layout.simple_dropdown_item_1line, Array("123", "445")))
+    searchEntry.setAdapter(new CalendarArrayAdapter(this, R.layout.simple_dropdown_item_1line,
+      Array("漢平帝元始元年", "元始元年", "元始元年一月朔", "元始元年正月初二", "元始元年二月己丑", "353年")))
     searchEntry.setOnItemClickListener(new AdapterView.OnItemClickListener () {
       override def onItemClick(parentView: AdapterView[_], selectedItemView: View, position: Int, id: Long) {
         //
