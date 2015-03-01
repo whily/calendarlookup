@@ -11,6 +11,7 @@
     android:id="@+id/search_entry"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:drawableLeft="@android:drawable/ic_menu_search"    
     android:hint="@string/search_entry_hint"
     android:imeOptions="actionGo"
     android:textSize="@dimen/edit_text_size_medium"

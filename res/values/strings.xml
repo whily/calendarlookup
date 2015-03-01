@@ -5,7 +5,7 @@
   <!--  SearchActivity -->
   <string name="settings">设置</string>
   <string name="about">关于</string>  
-  <string name="search_entry_hint">请输入中历或西历纪年、纪月或纪日</string>
+  <string name="search_entry_hint">中历或西历年[月[日]]</string>
   
   <!--  Activity Settings -->
   <string name="appearance_preference">显示</string>
@@ -40,7 +40,7 @@
     <html>
       <body>
         <center><h3>中西历查询 v0.0.1</h3></center>
-        <center><h4>Copyright &copy; 2013 Yujian Zhang</h4></center>
+        <center><h4>Copyright &copy; 2015 Yujian Zhang</h4></center>
         <center><h4>License: <a href="http://www.gnu.org/licenses/gpl-2.0.html">GNU General Public License v2</a></h4></center>
       </body>
     </html>
