@@ -19,7 +19,7 @@ import android.text.{Editable, TextWatcher}
 import android.view.{Menu, MenuItem, MotionEvent, View}
 import android.view.inputmethod.InputMethodManager
 import android.util.{Log, TypedValue}
-import android.widget.{AdapterView, ArrayAdapter, AutoCompleteTextView, TextView}
+import android.widget.{AdapterView, ArrayAdapter, AutoCompleteTextView, Button, TextView}
 import net.whily.scaland.{ExceptionHandler, Util}
 import net.whily.chinesecalendar.ChineseCalendar._
 import net.whily.chinesecalendar.Chinese._
@@ -27,6 +27,7 @@ import net.whily.chinesecalendar.Chinese._
 class SearchActivity extends Activity {
   private var bar: ActionBar = null
   private var searchEntry: AutoCompleteTextView = null
+  private var clearButton: Button = null
   private var resultText: TextView = null  
   private val ResultSettings = 1
   
@@ -75,6 +76,13 @@ class SearchActivity extends Activity {
   private def initWidgets() {
     resultText = findViewById(R.id.result).asInstanceOf[TextView]
 
+    clearButton = findViewById(R.id.clear_button).asInstanceOf[Button]
+    clearButton.setOnClickListener(new View.OnClickListener() {
+      override def onClick(v: View) {
+        searchEntry.setText("")
+      }
+    })
+
     searchEntry = findViewById(R.id.search_entry).asInstanceOf[AutoCompleteTextView]
     searchEntry.setThreshold(1)
     searchEntry.setOnTouchListener(new View.OnTouchListener() {
@@ -85,6 +93,12 @@ class SearchActivity extends Activity {
     })
     searchEntry.addTextChangedListener(new TextWatcher() {
       override def afterTextChanged(s: Editable) {
+        if (s.toString() == "") {
+          clearButton.setVisibility(View.INVISIBLE)
+        } else {
+          clearButton.setVisibility(View.VISIBLE)
+        }
+
         try {
           resultText.setText(toDate(Simplified2Traditional(s.toString())).toString())
         } catch {
