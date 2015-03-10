@@ -5,7 +5,7 @@
   <!--  SearchActivity -->
   <string name="settings">设置</string>
   <string name="about">关于</string>  
-  <string name="search_entry_hint">中历或西历年[月[日]]</string>
+  <string name="search_entry_hint">中历或西历年月日</string>
   
   <!--  Activity Settings -->
   <string name="appearance_preference">显示</string>
