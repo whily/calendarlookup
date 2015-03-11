@@ -30,6 +30,9 @@ class SearchActivity extends Activity {
   private var clearButton: Button = null
   private var resultText: TextView = null  
   private val ResultSettings = 1
+  private val exampleText =
+    Array("晉穆帝永和九年", "晉穆帝永和九年三月", "晉穆帝永和九年三月初三", "晉穆帝永和九年三月丙辰", "353年4月22日")
+  private val guideText = exampleText.mkString("\n")
   
   override def onCreate(icicle: Bundle) { 
     super.onCreate(icicle)
@@ -75,6 +78,7 @@ class SearchActivity extends Activity {
   // Initialize the widgets. The contents are initialized in `initContent`.
   private def initWidgets() {
     resultText = findViewById(R.id.result).asInstanceOf[TextView]
+    resultText.setText(guideText)
 
     clearButton = findViewById(R.id.clear_button).asInstanceOf[Button]
     clearButton.setOnClickListener(new View.OnClickListener() {
@@ -117,7 +121,7 @@ class SearchActivity extends Activity {
   // Initialize the contents of the widgets.
   private def initContents() {
     searchEntry.setAdapter(new CalendarArrayAdapter(this, R.layout.simple_dropdown_item_1line,
-      Array("晉穆帝永和九年", "晉穆帝永和九年三月", "晉穆帝永和九年三月初三", "晉穆帝永和九年三月丙辰", "353年4月22日")))
+      exampleText))
     searchEntry.setOnItemClickListener(new AdapterView.OnItemClickListener () {
       override def onItemClick(parentView: AdapterView[_], selectedItemView: View, position: Int, id: Long) {
         //
