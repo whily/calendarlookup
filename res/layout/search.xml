@@ -38,4 +38,8 @@
     android:paddingRight="@dimen/textview_horizontal_margin_large"
     android:paddingTop="@dimen/textview_vertical_margin"  	
     android:textSize="@dimen/edit_text_size_medium" />
+  <net.whily.android.calendarlookup.MonthView
+    android:id="@+id/month"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent" />
 </LinearLayout>
