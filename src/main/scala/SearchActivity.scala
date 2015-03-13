@@ -28,7 +28,8 @@ class SearchActivity extends Activity {
   private var bar: ActionBar = null
   private var searchEntry: AutoCompleteTextView = null
   private var clearButton: Button = null
-  private var resultText: TextView = null  
+  private var resultText: TextView = null
+  private var monthView: MonthView = null
   private val ResultSettings = 1
   private val exampleText =
     Array("晉穆帝永和九年", "晉穆帝永和九年三月", "晉穆帝永和九年三月初三", "晉穆帝永和九年三月丙辰", "353年4月22日")
@@ -80,6 +81,8 @@ class SearchActivity extends Activity {
     resultText = findViewById(R.id.result).asInstanceOf[TextView]
     resultText.setText(guideText)
 
+    monthView = findViewById(R.id.month).asInstanceOf[MonthView]
+
     clearButton = findViewById(R.id.clear_button).asInstanceOf[Button]
     clearButton.setOnClickListener(new View.OnClickListener() {
       override def onClick(v: View) {
@@ -104,9 +107,17 @@ class SearchActivity extends Activity {
         }
 
         try {
-          resultText.setText(toDate(Simplified2Traditional(s.toString())).toString())
+          val queryText = Simplified2Traditional(s.toString())
+          resultText.setText(toDate(queryText).toString())
+          monthView.sexagenary1stDay = sexagenary1stDayOfMonth(queryText)
+          monthView.daysPerMonth = monthLength(queryText)
+          monthView.showing = true
+          monthView.invalidate()
         } catch {
-          case ex: Exception => resultText.setText("......")
+          case ex: Exception =>
+            resultText.setText("......")
+            monthView.showing = false
+            monthView.invalidate()
         }
       }
 

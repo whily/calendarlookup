@@ -16,15 +16,79 @@ import android.content.Context
 import android.graphics.{Canvas, Color, Paint}
 import android.util.AttributeSet
 import android.view.View
+import net.whily.scaland.Util._
+import net.whily.chinesecalendar.ChineseCalendar._
 
 class MonthView(context: Context, attrs: AttributeSet) extends View(context, attrs) {
-  val paint = new Paint()
+  // Parameters that can be changed in the runtime.
+  var showing = false       // Whether to show the month view.
+  var sexagenary1stDay = "" // The sexagenary of the 1st day of the month.
+  var daysPerMonth = 30     // Number of days per month. Can only be 29 or 30
+
+  private val sexagenaryTextSizeSp = 18
+  private val dateTextSizeSp = (sexagenaryTextSizeSp * 0.6).toInt
+  private val sexagenaryTextSizePx = sp2px(sexagenaryTextSizeSp, context)  
+  private val dateTextSizePx = sp2px(dateTextSizeSp, context)
+  // Assuming one data occuipies one grid.
+  private val gridWidth = sp2px(sexagenaryTextSizeSp * 7 / 2, context)
+  private val gridHeight = sp2px(sexagenaryTextSizeSp * 5 / 3, context)
+  private val maxItemsPerRow = 6
+  // Start coordinates.
+  private val startX = sp2px(10, context)
+  private val startY = sp2px(30, context)
+  // Offset for dates.
+  private val dateOffsetX = sp2px(sexagenaryTextSizeSp * 11 / 5, context)
+  // Negative sign since we will draw the date text higher.
+  private val dateOffsetY = -sp2px(sexagenaryTextSizeSp * 9 / 20, context)
+  // We're writing the date in vertical way. So we need another offset for the 2nd character.
+
+  private val paint = new Paint()
   paint.setAntiAlias(true)
   paint.setStyle(Paint.Style.STROKE)
-  // paint.setColor(Color.RED)
 
   override protected def onDraw(canvas: Canvas) {
     super.onDraw(canvas)
-    canvas.drawText("test", 1, 20, paint)
+
+    if (!showing) return
+
+    assert((daysPerMonth == 29) || (daysPerMonth == 30))
+    val sexagenaryTexts = sexagenaries(sexagenary1stDay, daysPerMonth)
+
+    var itemsPerRow = Math.floor(canvas.getWidth() * 1.0 / gridWidth).toInt
+    if (itemsPerRow > maxItemsPerRow) {
+      itemsPerRow = maxItemsPerRow
+    }
+
+    // Font color
+    var sexagenaryColor = Color.BLACK // Light theme
+    var dateColor = Color.DKGRAY // Light theme
+    if (getThemePref(context) == 0) { // Dark theme
+      sexagenaryColor = Color.WHITE
+      dateColor = Color.LTGRAY
+    }
+
+    for (row <- 0 until Math.ceil(daysPerMonth * 1.0 / itemsPerRow).toInt) {
+      for (col <- 0 until itemsPerRow) {
+        val index = row * itemsPerRow + col
+        if (index < daysPerMonth) {
+          // Write sexagenary text, in horizontal way.
+          var x = startX + col * gridWidth
+          var y = startY + row * gridHeight
+          paint.setTextSize(sexagenaryTextSizePx)
+          paint.setColor(sexagenaryColor)
+          canvas.drawText(sexagenaryTexts(index), x, y, paint)
+
+          // Write date text, in vertical way.
+          val dateText = Dates(index)
+          paint.setTextSize(dateTextSizePx)
+          paint.setColor(dateColor)          
+          x += dateOffsetX
+          y += dateOffsetY
+          canvas.drawText(dateText.substring(0, 1), x, y, paint)
+          y += dateTextSizePx
+          canvas.drawText(dateText.substring(1, 2), x, y, paint)
+        }
+      }
+    }
   }
 }
