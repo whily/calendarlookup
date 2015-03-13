@@ -8,10 +8,12 @@ name := "calendarlookup"
 scalaVersion := "2.11.0"
 
 libraryDependencies ++= Seq(
-  "org.scalatest" %% "scalatest" % "2.2.0" % "test",
+  "org.scalatest" %% "scalatest" % "2.2.0" % "test", 
   "net.whily" %% "scasci" % "0.0.1-SNAPSHOT",
   "net.whily" %% "scaland" % "0.0.1-SNAPSHOT",
   "net.whily" %% "chinesecalendar" % "0.0.1-SNAPSHOT")
+
+libraryDependencies += aar("com.android.support" % "cardview-v7" % "21.0.0")
 
 platformTarget in Android := "android-21"
 
@@ -25,6 +27,7 @@ proguardOptions in Android ++= Seq(
   "-keepattributes Signature,InnerClasses,EnclosingMethod",
   "-dontwarn scala.collection.**",
   "-dontwarn sun.misc.Unsafe",
+  "-keep class com.android.support.v7.widget.CardView.** { *; }",
   "-keep class net.whily.android.calendarlookup.** { *; }",
   "-keep class net.whily.android.chinesecalendar.** { *; }",  
   "-keep class scala.collection.SeqLike { public java.lang.String toString(); }")

@@ -26,7 +26,8 @@ The following tools are needed to build Calendar Lookup from source:
 * JDK version 6/7 from <http://www.java.com> if Java is not available. 
   Note that JDK is preinstalled on Mac OS X and available via package manager
   on many Linux systems. 
-* Android SDK r23.0.5.
+* Android SDK r23.0.5 (since CardView is used, make sure to install b
+  oth *Android Support Repository* and *Android Support Library*)
 * Scala (2.11.0)
 * sbt (0.13.5)
 * [Inkscape](http://inkscape.org) and [ImageMagick](http://www.imagemagick.org)
