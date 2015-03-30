@@ -14,12 +14,12 @@
         android:defaultValue="0"
         android:shouldDisableView="false" />
     <ListPreference 
-        android:key="language_preference"
-        android:title="@string/language_title_preference" 
+        android:key="chinese_preference"
+        android:title="@string/chinese_title_preference" 
         android:summary="%s"
-        android:entries="@array/language_entries_preference" 
-        android:entryValues="@array/language_values_preference"
-        android:dialogTitle="@string/language_dialog_title_preference"
+        android:entries="@array/chinese_entries_preference" 
+        android:entryValues="@array/chinese_values_preference"
+        android:dialogTitle="@string/chinese_dialog_title_preference"
         android:persistent="true" 
         android:defaultValue="0"
         android:shouldDisableView="false" />         

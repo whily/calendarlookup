@@ -107,7 +107,7 @@ class SearchActivity extends Activity {
         }
 
         try {
-          val queryText = Simplified2Traditional(s.toString())
+          val queryText = simplified2Traditional(s.toString())
           resultText.setText(toDate(queryText).toString())
           monthView.sexagenary1stDay = sexagenary1stDayOfMonth(queryText)
           monthView.daysPerMonth = monthLength(queryText)
@@ -131,8 +131,15 @@ class SearchActivity extends Activity {
   
   // Initialize the contents of the widgets.
   private def initContents() {
+    val names = eraNames().map(s => s + "元年")
+    val chinese = Util.getChinesePref(this)
+    var displayNames = names
+    if (chinese == "simplified") {
+      displayNames = names.map(s => traditional2Simplified(s))
+    }
+
     searchEntry.setAdapter(new CalendarArrayAdapter(this, R.layout.simple_dropdown_item_1line,
-      exampleText))
+      displayNames))
     searchEntry.setOnItemClickListener(new AdapterView.OnItemClickListener () {
       override def onItemClick(parentView: AdapterView[_], selectedItemView: View, position: Int, id: Long) {
         //
