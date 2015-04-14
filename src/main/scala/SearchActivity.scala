@@ -78,6 +78,7 @@ class SearchActivity extends Activity {
   
   // Initialize the widgets. The contents are initialized in `initContent`.
   private def initWidgets() {
+    val activity = this
     resultText = findViewById(R.id.result).asInstanceOf[TextView]
     resultText.setText(guideText)
 
@@ -108,9 +109,21 @@ class SearchActivity extends Activity {
 
         try {
           val queryText = simplified2Traditional(s.toString())
-          resultText.setText(toDate(queryText).toString())
-          monthView.sexagenary1stDay = sexagenary1stDayOfMonth(queryText)
-          monthView.daysPerMonth = monthLength(queryText)
+          var chineseDate = queryText
+          if (Character.isDigit(queryText.charAt(0))) {
+            var result = fromDate(queryText)
+            val chinese = Util.getChinesePref(activity)
+            if (chinese == "simplified") {
+              result = result.map(traditional2Simplified(_))
+            }
+            resultText.setText(result.mkString("\n"))
+            chineseDate = result(0)
+          } else {
+            resultText.setText(toDate(queryText).toString())
+          }
+          Util.hideSoftInput(activity, searchEntry)
+          monthView.sexagenary1stDay = sexagenary1stDayOfMonth(chineseDate)
+          monthView.daysPerMonth = monthLength(chineseDate)
           monthView.showing = true
           monthView.invalidate()
         } catch {
