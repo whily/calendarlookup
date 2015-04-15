@@ -34,6 +34,7 @@ class SearchActivity extends Activity {
   private val exampleText =
     Array("晉穆帝永和九年", "晉穆帝永和九年三月", "晉穆帝永和九年三月初三", "晉穆帝永和九年三月丙辰", "353年4月22日")
   private val guideText = exampleText.mkString("\n")
+  private var displayChinese = "simplified"
   
   override def onCreate(icicle: Bundle) { 
     super.onCreate(icicle)
@@ -111,13 +112,12 @@ class SearchActivity extends Activity {
           val queryText = simplified2Traditional(s.toString())
           var chineseDate = queryText
           if (Character.isDigit(queryText.charAt(0))) {
-            var result = fromDate(queryText)
-            val chinese = Util.getChinesePref(activity)
-            if (chinese == "simplified") {
-              result = result.map(traditional2Simplified(_))
-            }
-            resultText.setText(result.mkString("\n"))
-            chineseDate = result(0)
+            val result = fromDate(queryText)
+            chineseDate = result(0)            
+            val resultNorm = 
+              if (displayChinese == "simplified") result.map(traditional2Simplified(_))
+              else result
+            resultText.setText(resultNorm.mkString("\n"))
           } else {
             resultText.setText(toDate(queryText).toString())
           }
@@ -145,9 +145,9 @@ class SearchActivity extends Activity {
   // Initialize the contents of the widgets.
   private def initContents() {
     val names = eraNames().map(s => s + "元年")
-    val chinese = Util.getChinesePref(this)
+    displayChinese = Util.getChinesePref(this)
     var displayNames = names
-    if (chinese == "simplified") {
+    if (displayChinese == "simplified") {
       displayNames = names.map(s => traditional2Simplified(s))
     }
 
