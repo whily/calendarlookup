@@ -111,16 +111,21 @@ class SearchActivity extends Activity {
         try {
           val queryText = simplified2Traditional(s.toString())
           var chineseDate = queryText
+          var yearSexagenary = if (displayChinese == "simplified") "岁次" else "歲次"
+          var dateText = ""
           if (Character.isDigit(queryText.charAt(0))) {
             val result = fromDate(queryText)
             chineseDate = result(0)            
             val resultNorm = 
               if (displayChinese == "simplified") result.map(traditional2Simplified(_))
               else result
-            resultText.setText(resultNorm.mkString("\n"))
+            yearSexagenary += parseDate(chineseDate).yearSexagenary()
+            dateText = resultNorm.mkString("\n")
           } else {
-            resultText.setText(toDate(queryText).toString())
+            yearSexagenary += parseDate(queryText).yearSexagenary()
+            dateText = toDate(queryText).toString()
           }
+          resultText.setText(yearSexagenary + "\n" + dateText)
           Util.hideSoftInput(activity, searchEntry)
           monthView.sexagenary1stDay = sexagenary1stDayOfMonth(chineseDate)
           monthView.daysPerMonth = monthLength(chineseDate)
