@@ -127,6 +127,8 @@ class SearchActivity extends Activity {
           }
           resultText.setText(yearSexagenary + "\n" + dateText)
           Util.hideSoftInput(activity, searchEntry)
+          monthView.year = chineseDate + yearSexagenary
+          monthView.month = parseDate(chineseDate).month
           monthView.sexagenary1stDay = sexagenary1stDayOfMonth(chineseDate)
           monthView.daysPerMonth = monthLength(chineseDate)
           monthView.showing = true
