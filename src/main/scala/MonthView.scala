@@ -110,4 +110,30 @@ class MonthView(context: Context, attrs: AttributeSet) extends View(context, att
       }
     }
   }
+
+  private class MyGestureListener extends GestureDetector.SimpleOnGestureListener {
+    override def onFling(e1: MotionEvent, e2: MotionEvent, velocityX: Float, velocityY: Float): Boolean = {
+      val threshold = sp2px(30, context)
+      var newChineseDate: ChineseCalendar = null
+      if (e2.getY() - e1.getY() > threshold) {
+        newChineseDate = chineseDate.lastDayPrevMonth(false)
+      } else if (e2.getY() - e1.getY() < -threshold) {
+        newChineseDate = chineseDate.firstDayNextMonth(false)        
+      } else if (e2.getX() - e1.getX() > threshold) {
+      } else if (e2.getX() - e1.getX() < -threshold) {
+      }
+
+      if (newChineseDate != null)
+        searchActivity.showMonthView(newChineseDate)
+
+      true
+    }
+
+    override def onShowPress(event: MotionEvent) {
+    }
+
+    override def onSingleTapConfirmed(event: MotionEvent): Boolean = {
+      true
+    }        
+  }  
 }

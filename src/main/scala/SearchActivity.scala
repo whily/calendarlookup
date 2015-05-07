@@ -21,6 +21,7 @@ import android.view.inputmethod.InputMethodManager
 import android.util.{Log, TypedValue}
 import android.widget.{AdapterView, ArrayAdapter, AutoCompleteTextView, Button, TextView}
 import net.whily.scaland.{ExceptionHandler, Util}
+import net.whily.chinesecalendar.ChineseCalendar
 import net.whily.chinesecalendar.ChineseCalendar._
 import net.whily.chinesecalendar.Chinese._
 
@@ -84,6 +85,7 @@ class SearchActivity extends Activity {
     resultText.setText(guideText)
 
     monthView = findViewById(R.id.month).asInstanceOf[MonthView]
+    monthView.searchActivity = this
 
     clearButton = findViewById(R.id.clear_button).asInstanceOf[Button]
     clearButton.setOnClickListener(new View.OnClickListener() {
@@ -110,29 +112,21 @@ class SearchActivity extends Activity {
 
         try {
           val queryText = simplified2Traditional(s.toString())
-          var chineseDate = queryText
-          var yearSexagenary = if (displayChinese == "simplified") "岁次" else "歲次"
+          var chineseDateText = queryText
           var dateText = ""
           if (Character.isDigit(queryText.charAt(0))) {
             val result = fromDate(queryText)
-            chineseDate = result(0)            
+            chineseDateText = result(0)            
             val resultNorm = 
               if (displayChinese == "simplified") result.map(traditional2Simplified(_))
               else result
-            yearSexagenary += parseDate(chineseDate).yearSexagenary()
             dateText = resultNorm.mkString("\n")
           } else {
-            yearSexagenary += parseDate(queryText).yearSexagenary()
             dateText = toDate(queryText).toString()
           }
-          resultText.setText(yearSexagenary + "\n" + dateText)
+          resultText.setText(dateText)
           Util.hideSoftInput(activity, searchEntry)
-          monthView.year = chineseDate + yearSexagenary
-          monthView.month = parseDate(chineseDate).month
-          monthView.sexagenary1stDay = sexagenary1stDayOfMonth(chineseDate)
-          monthView.daysPerMonth = monthLength(chineseDate)
-          monthView.showing = true
-          monthView.invalidate()
+          showMonthView(parseDate(chineseDateText))
         } catch {
           case ex: Exception =>
             resultText.setText("......")
@@ -165,5 +159,17 @@ class SearchActivity extends Activity {
         //
       }    
     })  
+  }
+
+  def showMonthView(chineseDate: ChineseCalendar) {
+    val yearSexagenary = (if (displayChinese == "simplified") "岁次" else "歲次") +
+                         chineseDate.yearSexagenary()
+    monthView.chineseDate = chineseDate
+    monthView.year = chineseDate.monarchEra + chineseDate.year + yearSexagenary
+    monthView.month = chineseDate.month
+    monthView.sexagenary1stDay = sexagenary1stDayOfMonth(chineseDate)
+    monthView.daysPerMonth = monthLength(chineseDate)
+    monthView.showing = true
+    monthView.invalidate()
   }
 }
