@@ -15,17 +15,23 @@ import android.app.Activity
 import android.content.Context
 import android.graphics.{Canvas, Color, Paint}
 import android.util.AttributeSet
-import android.view.View
+import android.view.{GestureDetector, MotionEvent, View}
 import net.whily.scaland.Util._
+import net.whily.chinesecalendar.ChineseCalendar
 import net.whily.chinesecalendar.ChineseCalendar._
 
 class MonthView(context: Context, attrs: AttributeSet) extends View(context, attrs) {
   // Parameters that can be changed in the runtime.
+  var searchActivity: SearchActivity = null
+  var chineseDate: ChineseCalendar = null
   var showing = false       // Whether to show the month view.
   var year = ""             // Year information
   var month = ""            // Month information
   var sexagenary1stDay = "" // The sexagenary of the 1st day of the month.
   var daysPerMonth = 30     // Number of days per month. Can only be 29 or 30
+
+  // Detect gestures of touch and scroll.
+  private val gestureDetector = new GestureDetector(context, new MyGestureListener())
 
   private val sexagenaryTextSizeSp = 18
   private val dateTextSizeSp = (sexagenaryTextSizeSp * 0.6).toInt
@@ -40,6 +46,11 @@ class MonthView(context: Context, attrs: AttributeSet) extends View(context, att
   paint.setAntiAlias(true)
   paint.setStyle(Paint.Style.STROKE)
 
+  override def onTouchEvent(event: MotionEvent): Boolean = {
+    gestureDetector.onTouchEvent(event)
+    true
+  }    
+
   override protected def onDraw(canvas: Canvas) {
     super.onDraw(canvas)
 
@@ -53,33 +64,46 @@ class MonthView(context: Context, attrs: AttributeSet) extends View(context, att
       itemsPerRow = maxItemsPerRow
     }
 
-    // Font color
-    var sexagenaryColor = Color.BLACK // Light theme
-    var dateColor = Color.DKGRAY // Light theme
+    // Font color of light theme.
+    var sexagenaryColor = Color.BLACK 
+    var dateColor = Color.DKGRAY 
+    val cyan = Color.rgb(0, 150, 136)
+    var barColor = cyan 
+    var selectedDateColor = cyan 
+    var selectedBackgroundColor = Color.rgb(182, 217, 214) 
+    var yearMonthColor = Color.WHITE 
     if (getThemePref(context) == 0) { // Dark theme
       sexagenaryColor = Color.WHITE
       dateColor = Color.LTGRAY
     }
 
-    // Show year.
+    // Coordinates
     val yearX = sp2px(10, context)
-    val yearY = sp2px(30, context)
+    val yearY = sp2px(30, context)    
+    val monthX = yearX
+    val monthY = yearY + gridHeight
+
+    // Draw bar for year and month text.
+    paint.setColor(barColor)
+    paint.setStyle(Paint.Style.FILL)
+    canvas.drawRect(0, 0, itemsPerRow * gridWidth, monthY + gridHeight * 0.15f, paint)
+
+    // Show year.
     paint.setTextSize(sexagenaryTextSizePx)
-    paint.setColor(sexagenaryColor)
+    paint.setColor(yearMonthColor)
     canvas.drawText(year, yearX, yearY, paint)
 
     // Show month.
-    val monthX = yearX
-    val monthY = yearY + gridHeight
+
     paint.setTextSize(sexagenaryTextSizePx)
-    paint.setColor(sexagenaryColor)
+    paint.setColor(yearMonthColor)
     canvas.drawText(month, monthX, monthY, paint)
 
     // TODO: mark the current date
 
     // Start coordinates for dates
     val dateStartX = yearX
-    val dateStartY = monthY + gridHeight
+    val dateStartY = monthY + gridHeight    
     // Offset for dates.
     val dateOffsetX = sp2px(sexagenaryTextSizeSp * 11 / 5, context)
     // Negative sign since we will draw the date text higher.
