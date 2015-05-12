@@ -30,9 +30,30 @@
       android:layout_marginRight="8dp" />
   </LinearLayout>
   <TextView 
-    android:id="@+id/result"
+    android:id="@+id/jg_calendar_textview"
+    android:gravity="center"  
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:paddingBottom="@dimen/textview_vertical_margin"
+    android:paddingLeft="@dimen/textview_horizontal_margin_large"
+    android:paddingRight="@dimen/textview_horizontal_margin_large"
+    android:paddingTop="@dimen/textview_vertical_margin"  	
+    android:textSize="@dimen/edit_text_size_medium" />
+  <Button
+    android:id="@+id/alt_calendar_button_1"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:visibility="invisible"
+    android:paddingBottom="@dimen/textview_vertical_margin"
+    android:paddingLeft="@dimen/textview_horizontal_margin_large"
+    android:paddingRight="@dimen/textview_horizontal_margin_large"
+    android:paddingTop="@dimen/textview_vertical_margin"  	
+    android:textSize="@dimen/edit_text_size_medium" />
+  <Button
+    android:id="@+id/alt_calendar_button_2"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:visibility="invisible"
     android:paddingBottom="@dimen/textview_vertical_margin"
     android:paddingLeft="@dimen/textview_horizontal_margin_large"
     android:paddingRight="@dimen/textview_horizontal_margin_large"

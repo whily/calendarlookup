@@ -29,12 +29,13 @@ class SearchActivity extends Activity {
   private var bar: ActionBar = null
   private var searchEntry: AutoCompleteTextView = null
   private var clearButton: Button = null
-  private var resultText: TextView = null
+  private var jgCalendarTextView: TextView = null
+  private var altCalendarButtons: Array[Button] = null
   private var monthView: MonthView = null
   private val ResultSettings = 1
   private val exampleText =
     Array("晉穆帝永和九年", "晉穆帝永和九年三月", "晉穆帝永和九年三月初三", "晉穆帝永和九年三月丙辰", "353年4月22日")
-  private val guideText = exampleText.mkString("\n")
+  private val guideText = "..." // exampleText.mkString("\n")
   private var displayChinese = "simplified"
   
   override def onCreate(icicle: Bundle) { 
@@ -81,8 +82,12 @@ class SearchActivity extends Activity {
   // Initialize the widgets. The contents are initialized in `initContent`.
   private def initWidgets() {
     val activity = this
-    resultText = findViewById(R.id.result).asInstanceOf[TextView]
-    resultText.setText(guideText)
+    jgCalendarTextView = findViewById(R.id.jg_calendar_textview).asInstanceOf[TextView]
+    jgCalendarTextView.setText(guideText)
+
+    val altCalendarButton1 = findViewById(R.id.alt_calendar_button_1).asInstanceOf[Button]
+    val altCalendarButton2 = findViewById(R.id.alt_calendar_button_2).asInstanceOf[Button]
+    altCalendarButtons = Array(altCalendarButton1, altCalendarButton2)
 
     monthView = findViewById(R.id.month).asInstanceOf[MonthView]
     monthView.searchActivity = this
@@ -113,23 +118,34 @@ class SearchActivity extends Activity {
         try {
           val queryText = simplified2Traditional(s.toString())
           var chineseDateText = queryText
-          var dateText = ""
+          var jgCalendarText = ""
+          var altCalendars: Array[String] = null
           if (Character.isDigit(queryText.charAt(0))) {
             val result = fromDate(queryText)
             chineseDateText = result(0)            
             val resultNorm = 
               if (displayChinese == "simplified") result.map(traditional2Simplified(_))
               else result
-            dateText = resultNorm.mkString("\n")
+            altCalendars = resultNorm.tail.toArray
+            jgCalendarText = queryText
           } else {
-            dateText = toDate(queryText).toString()
+            jgCalendarText = toDate(queryText).toString()
           }
-          resultText.setText(dateText)
+          jgCalendarTextView.setText(jgCalendarText)
+          val altCalendarLength = if (altCalendars == null) 0 else altCalendars.length
+          for (i <- 0 until altCalendarButtons.length) {
+            if (i < altCalendarLength) {
+              altCalendarButtons(i).setVisibility(View.VISIBLE)
+              altCalendarButtons(i).setText(altCalendars(i))
+            } else {
+              altCalendarButtons(i).setVisibility(View.INVISIBLE)
+            }
+          }
           Util.hideSoftInput(activity, searchEntry)
           showMonthView(parseDate(chineseDateText))
         } catch {
           case ex: Exception =>
-            resultText.setText("......")
+            jgCalendarTextView.setText("......")
             monthView.showing = false
             monthView.invalidate()
         }
