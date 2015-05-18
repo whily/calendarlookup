@@ -181,7 +181,7 @@ class SearchActivity extends Activity {
     val yearSexagenary = (if (displayChinese == "simplified") "岁次" else "歲次") +
                          chineseDate.yearSexagenary()
     monthView.chineseDate = chineseDate
-    monthView.year = chineseDate.monarchEra + chineseDate.year + yearSexagenary
+    monthView.year = chineseDate.era + chineseDate.year + yearSexagenary
     monthView.month = chineseDate.month
     monthView.sexagenary1stDay = sexagenary1stDayOfMonth(chineseDate)
     monthView.daysPerMonth = monthLength(chineseDate)
