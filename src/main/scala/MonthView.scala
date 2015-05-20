@@ -63,6 +63,7 @@ class MonthView(context: Context, attrs: AttributeSet) extends View(context, att
     if (itemsPerRow > maxItemsPerRow) {
       itemsPerRow = maxItemsPerRow
     }
+    val viewWidth = itemsPerRow * gridWidth + gridWidth * 0.1f
 
     // Font color of light theme.
     var sexagenaryColor = Color.BLACK 
@@ -86,7 +87,7 @@ class MonthView(context: Context, attrs: AttributeSet) extends View(context, att
     // Draw bar for year and month text.
     paint.setColor(barColor)
     paint.setStyle(Paint.Style.FILL)
-    canvas.drawRect(0, 0, itemsPerRow * gridWidth, monthY + gridHeight * 0.15f, paint)
+    canvas.drawRect(0, 0, viewWidth, monthY + gridHeight * 0.15f, paint)
 
     // Show year.
     paint.setTextSize(sexagenaryTextSizePx)
@@ -110,7 +111,14 @@ class MonthView(context: Context, attrs: AttributeSet) extends View(context, att
     val dateOffsetY = -sp2px(sexagenaryTextSizeSp * 9 / 20, context)
     // We're writing the date in vertical way. So we need another offset for the 2nd character.
 
-    for (row <- 0 until Math.ceil(daysPerMonth * 1.0 / itemsPerRow).toInt) {
+    // Draw the outline of month view.
+    val rows = Math.ceil(daysPerMonth * 1.0 / itemsPerRow).toInt
+    val viewHeight = dateStartY + (rows - 0.5f) * gridHeight
+    paint.setColor(barColor)
+    paint.setStyle(Paint.Style.STROKE)
+    canvas.drawRect(0, 0, viewWidth, viewHeight, paint)    
+
+    for (row <- 0 until rows) {
       for (col <- 0 until itemsPerRow) {
         val index = row * itemsPerRow + col
         if (index < daysPerMonth) {
