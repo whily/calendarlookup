@@ -54,7 +54,8 @@ class MonthView(context: Context, attrs: AttributeSet) extends View(context, att
   override protected def onDraw(canvas: Canvas) {
     super.onDraw(canvas)
 
-    if (!showing) return
+    if (!showing)
+      return
 
     assert((daysPerMonth == 29) || (daysPerMonth == 30))
     val sexagenaryTexts = sexagenaries(sexagenary1stDay, daysPerMonth)
@@ -116,7 +117,10 @@ class MonthView(context: Context, attrs: AttributeSet) extends View(context, att
     val viewHeight = dateStartY + (rows - 0.5f) * gridHeight
     paint.setColor(barColor)
     paint.setStyle(Paint.Style.STROKE)
-    canvas.drawRect(0, 0, viewWidth, viewHeight, paint)    
+    canvas.drawRect(0, 0, viewWidth, viewHeight, paint)
+
+    // Set the height.
+    getLayoutParams().height = viewHeight.toInt
 
     for (row <- 0 until rows) {
       for (col <- 0 until itemsPerRow) {

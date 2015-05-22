@@ -138,7 +138,7 @@ class SearchActivity extends Activity {
               altCalendarButtons(i).setVisibility(View.VISIBLE)
               altCalendarButtons(i).setText(altCalendars(i))
             } else {
-              altCalendarButtons(i).setVisibility(View.INVISIBLE)
+              altCalendarButtons(i).setVisibility(View.GONE)
             }
           }
           Util.hideSoftInput(activity, searchEntry)
@@ -147,6 +147,7 @@ class SearchActivity extends Activity {
           case ex: Exception =>
             jgCalendarTextView.setText("......")
             monthView.showing = false
+            monthView.setVisibility(View.GONE)
             monthView.invalidate()
         }
       }
@@ -186,6 +187,7 @@ class SearchActivity extends Activity {
     monthView.sexagenary1stDay = sexagenary1stDayOfMonth(chineseDate)
     monthView.daysPerMonth = monthLength(chineseDate)
     monthView.showing = true
+    monthView.setVisibility(View.VISIBLE)
     monthView.invalidate()
   }
 }
