@@ -141,7 +141,7 @@ class SearchActivity extends Activity {
     // and Julian/Gregorian Calendar.
 
     val actualQueryText =
-      if (Character.isDigit(queryText.charAt(0))) queryText
+      if (Character.isDigit(queryText.charAt(0)) || queryText.startsWith("公元前")) queryText
       else toDate(queryText).toString()
 
     val result = fromDate(actualQueryText)
