@@ -81,7 +81,6 @@ class SearchActivity extends Activity {
   
   // Initialize the widgets. The contents are initialized in `initContent`.
   private def initWidgets() {
-    val activity = this
     jgCalendarTextView = findViewById(R.id.jg_calendar_textview).asInstanceOf[TextView]
     jgCalendarTextView.setText(guideText)
 
@@ -116,33 +115,7 @@ class SearchActivity extends Activity {
         }
 
         try {
-          val queryText = simplified2Traditional(s.toString())
-          var chineseDateText = queryText
-          var jgCalendarText = ""
-          var altCalendars: Array[String] = null
-          if (Character.isDigit(queryText.charAt(0))) {
-            val result = fromDate(queryText)
-            chineseDateText = result(0)            
-            val resultNorm = 
-              if (displayChinese == "simplified") result.map(traditional2Simplified(_))
-              else result
-            altCalendars = resultNorm.tail.toArray
-            jgCalendarText = queryText
-          } else {
-            jgCalendarText = toDate(queryText).toString()
-          }
-          jgCalendarTextView.setText(jgCalendarText)
-          val altCalendarLength = if (altCalendars == null) 0 else altCalendars.length
-          for (i <- 0 until altCalendarButtons.length) {
-            if (i < altCalendarLength) {
-              altCalendarButtons(i).setVisibility(View.VISIBLE)
-              altCalendarButtons(i).setText(altCalendars(i))
-            } else {
-              altCalendarButtons(i).setVisibility(View.GONE)
-            }
-          }
-          Util.hideSoftInput(activity, searchEntry)
-          showMonthView(parseDate(chineseDateText))
+          queryAndShow(s.toString)
         } catch {
           case ex: Exception =>
             jgCalendarTextView.setText("......")
@@ -158,6 +131,38 @@ class SearchActivity extends Activity {
       override def onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
       }
     })
+  }
+
+  private def queryAndShow(s: String) {
+    val queryText = simplified2Traditional(s.toString())
+    var altCalendars: Array[String] = null
+
+    // Unify the search for inpu from both Chinese Calendar
+    // and Julian/Gregorian Calendar.
+
+    val actualQueryText =
+      if (Character.isDigit(queryText.charAt(0))) queryText
+      else toDate(queryText).toString()
+
+    val result = fromDate(actualQueryText)
+    val chineseDateText = result(0)
+    val resultNorm =
+      if (displayChinese == "simplified") result.map(traditional2Simplified(_))
+      else result
+    altCalendars = resultNorm.tail.toArray
+    jgCalendarTextView.setText(actualQueryText)
+
+    val altCalendarLength = if (altCalendars == null) 0 else altCalendars.length
+    for (i <- 0 until altCalendarButtons.length) {
+      if (i < altCalendarLength) {
+        altCalendarButtons(i).setVisibility(View.VISIBLE)
+        altCalendarButtons(i).setText(altCalendars(i))
+      } else {
+        altCalendarButtons(i).setVisibility(View.GONE)
+      }
+    }
+    Util.hideSoftInput(this, searchEntry)
+    showMonthView(parseDate(chineseDateText))
   }
   
   // Initialize the contents of the widgets.
