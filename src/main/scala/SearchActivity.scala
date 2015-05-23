@@ -161,7 +161,10 @@ class SearchActivity extends Activity {
         altCalendarButtons(i).setVisibility(View.GONE)
       }
     }
-    Util.hideSoftInput(this, searchEntry)
+    if (!((searchEntry.getSelectionStart() < queryText.length) ||
+      queryText.endsWith("年") || queryText.endsWith("月"))) {
+      Util.hideSoftInput(this, searchEntry)
+    }
     showMonthView(parseDate(chineseDateText))
   }
   
