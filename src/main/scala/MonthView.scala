@@ -49,7 +49,12 @@ class MonthView(context: Context, attrs: AttributeSet) extends View(context, att
   override def onTouchEvent(event: MotionEvent): Boolean = {
     gestureDetector.onTouchEvent(event)
     true
-  }    
+  }
+
+  //override protected onMeasure(widthSpec: Int, heightSpec: Int) {
+  //  val height = 1
+  //  setMeasuredDimension(widthSpec, height)
+  //}
 
   override protected def onDraw(canvas: Canvas) {
     super.onDraw(canvas)
@@ -80,15 +85,18 @@ class MonthView(context: Context, attrs: AttributeSet) extends View(context, att
     }
 
     // Coordinates
-    val yearX = sp2px(10, context)
-    val yearY = sp2px(30, context)    
+    // TODO: align MonthView with the buttones above.
+    val left = getPaddingLeft() / 2
+    val top = getPaddingTop() / 2
+    val yearX = left + sp2px(10, context)
+    val yearY = top + sp2px(30, context)    
     val monthX = yearX
     val monthY = yearY + gridHeight
 
     // Draw bar for year and month text.
     paint.setColor(barColor)
     paint.setStyle(Paint.Style.FILL)
-    canvas.drawRect(0, 0, viewWidth, monthY + gridHeight * 0.15f, paint)
+    canvas.drawRect(left, top, left + viewWidth, monthY + gridHeight * 0.15f, paint)
 
     // Show year.
     paint.setTextSize(sexagenaryTextSizePx)
@@ -117,7 +125,7 @@ class MonthView(context: Context, attrs: AttributeSet) extends View(context, att
     val viewHeight = dateStartY + (rows - 0.5f) * gridHeight
     paint.setColor(barColor)
     paint.setStyle(Paint.Style.STROKE)
-    canvas.drawRect(0, 0, viewWidth, viewHeight, paint)
+    canvas.drawRect(left, top, left + viewWidth, viewHeight, paint)
 
     // Set the height.
     getLayoutParams().height = viewHeight.toInt
