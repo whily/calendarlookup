@@ -36,7 +36,7 @@ class SearchActivity extends Activity {
   private val exampleText =
     Array("晉穆帝永和九年", "晉穆帝永和九年三月", "晉穆帝永和九年三月初三", "晉穆帝永和九年三月丙辰", "353年4月22日")
   private val guideText = "..." // exampleText.mkString("\n")
-  private var displayChinese = "simplified"
+  private var displaySimplified = true
   
   override def onCreate(icicle: Bundle) { 
     super.onCreate(icicle)
@@ -157,9 +157,7 @@ class SearchActivity extends Activity {
         originalDate
       }
     val resultFilter = result.filter(_ != chineseDateText)
-    val resultNorm =
-      if (displayChinese == "simplified") resultFilter.map(traditional2Simplified(_))
-      else resultFilter
+    val resultNorm = resultFilter.map(normalizeChinese(_))
     altCalendars = resultFilter.toArray
     jgCalendarTextView.setText(actualQueryText)
 
@@ -182,12 +180,11 @@ class SearchActivity extends Activity {
   // Initialize the contents of the widgets.
   private def initContents() {
     val names = eraNames().map(s => s + "元年")
-    displayChinese = Util.getChinesePref(this)
-    var displayNames = names
-    if (displayChinese == "simplified") {
-      displayNames = names.map(s => traditional2Simplified(s))
+    val displayChinese = Util.getChinesePref(this)
+    if (displayChinese != "simplified") {
+      displaySimplified = false
     }
-
+    val displayNames = names.map(normalizeChinese(_))
     searchEntry.setAdapter(new CalendarArrayAdapter(this, R.layout.simple_dropdown_item_1line,
       displayNames))
     searchEntry.setOnItemClickListener(new AdapterView.OnItemClickListener () {
@@ -198,15 +195,18 @@ class SearchActivity extends Activity {
   }
 
   def showMonthView(chineseDate: ChineseCalendar) {
-    val yearSexagenary = (if (displayChinese == "simplified") "岁次" else "歲次") +
-                         chineseDate.yearSexagenary()
+    val yearSexagenary = normalizeChinese("歲次") + chineseDate.yearSexagenary()
     monthView.chineseDate = chineseDate
-    monthView.year = chineseDate.era + chineseDate.year + yearSexagenary
-    monthView.month = chineseDate.month
+    monthView.year = normalizeChinese(chineseDate.era + chineseDate.year + yearSexagenary)
+    monthView.month = normalizeChinese(chineseDate.month)
     monthView.sexagenary1stDay = sexagenary1stDayOfMonth(chineseDate)
     monthView.daysPerMonth = monthLength(chineseDate)
     monthView.showing = true
     monthView.setVisibility(View.VISIBLE)
     monthView.invalidate()
   }
+
+  private def normalizeChinese(s: String) =
+    if (displaySimplified) traditional2Simplified(s)
+    else s
 }
