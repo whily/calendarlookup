@@ -119,6 +119,9 @@ class SearchActivity extends Activity {
         } catch {
           case ex: Exception =>
             jgCalendarTextView.setText("......")
+            for (i <- 0 until altCalendarButtons.length) {
+              altCalendarButtons(i).setVisibility(View.GONE)
+            }
             monthView.showing = false
             monthView.setVisibility(View.GONE)
             monthView.invalidate()
@@ -140,16 +143,24 @@ class SearchActivity extends Activity {
     // Unify the search for inpu from both Chinese Calendar
     // and Julian/Gregorian Calendar.
 
-    val actualQueryText =
-      if (Character.isDigit(queryText.charAt(0)) || queryText.startsWith("公元前")) queryText
-      else toDate(queryText).toString()
+    // True if query is in form of Julian/Gregorian Calendar.
+    val jgEntry = Character.isDigit(queryText.charAt(0)) || queryText.startsWith("公元前")
+
+    val actualQueryText = if (jgEntry) queryText else toDate(queryText).toString()
 
     val result = fromDate(actualQueryText)
-    val chineseDateText = result(0)
+    val chineseDateText =
+      if (jgEntry) result(0)
+      else {
+        val year = parseDate(queryText).era
+        val Some(originalDate) = result.find(_.startsWith(year))
+        originalDate
+      }
+    val resultFilter = result.filter(_ != chineseDateText)
     val resultNorm =
-      if (displayChinese == "simplified") result.map(traditional2Simplified(_))
-      else result
-    altCalendars = resultNorm.tail.toArray
+      if (displayChinese == "simplified") resultFilter.map(traditional2Simplified(_))
+      else resultFilter
+    altCalendars = resultFilter.toArray
     jgCalendarTextView.setText(actualQueryText)
 
     val altCalendarLength = if (altCalendars == null) 0 else altCalendars.length
