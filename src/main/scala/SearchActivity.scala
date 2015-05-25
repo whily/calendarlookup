@@ -87,6 +87,13 @@ class SearchActivity extends Activity {
     val altCalendarButton1 = findViewById(R.id.alt_calendar_button_1).asInstanceOf[Button]
     val altCalendarButton2 = findViewById(R.id.alt_calendar_button_2).asInstanceOf[Button]
     altCalendarButtons = Array(altCalendarButton1, altCalendarButton2)
+    for (altCalendarButton <- altCalendarButtons) {
+      altCalendarButton.setOnClickListener(new View.OnClickListener() {
+        override def onClick(v: View) {
+          queryAndShow(altCalendarButton.getText().toString())
+        }
+      })
+    }
 
     monthView = findViewById(R.id.month).asInstanceOf[MonthView]
     monthView.searchActivity = this
@@ -118,7 +125,7 @@ class SearchActivity extends Activity {
           queryAndShow(s.toString)
         } catch {
           case ex: Exception =>
-            jgCalendarTextView.setText("......")
+            jgCalendarTextView.setText("" + ex)
             for (i <- 0 until altCalendarButtons.length) {
               altCalendarButtons(i).setVisibility(View.GONE)
             }
@@ -136,7 +143,7 @@ class SearchActivity extends Activity {
     })
   }
 
-  private def queryAndShow(s: String) {
+  def queryAndShow(s: String) {
     val queryText = simplified2Traditional(s.toString())
     var altCalendars: Array[String] = null
 
@@ -157,8 +164,7 @@ class SearchActivity extends Activity {
         originalDate
       }
     val resultFilter = result.filter(_ != chineseDateText)
-    val resultNorm = resultFilter.map(normalizeChinese(_))
-    altCalendars = resultFilter.toArray
+    altCalendars = resultFilter.map(s => normalizeChinese(parseDate(s).toString())).toArray
     jgCalendarTextView.setText(actualQueryText)
 
     val altCalendarLength = if (altCalendars == null) 0 else altCalendars.length
@@ -194,8 +200,8 @@ class SearchActivity extends Activity {
     })  
   }
 
-  def showMonthView(chineseDate: ChineseCalendar) {
-    val yearSexagenary = normalizeChinese("歲次") + chineseDate.yearSexagenary()
+  private def showMonthView(chineseDate: ChineseCalendar) {
+    val yearSexagenary = "歲次" + chineseDate.yearSexagenary()
     monthView.chineseDate = chineseDate
     monthView.year = normalizeChinese(chineseDate.era + chineseDate.year + yearSexagenary)
     monthView.month = normalizeChinese(chineseDate.month)

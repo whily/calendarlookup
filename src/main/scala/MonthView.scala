@@ -113,7 +113,7 @@ class MonthView(context: Context, attrs: AttributeSet) extends View(context, att
 
     // Start coordinates for dates
     val dateStartX = yearX
-    val dateStartY = monthY + gridHeight    
+    val dateStartY = monthY + gridHeight
     // Offset for dates.
     val dateOffsetX = sp2px(sexagenaryTextSizeSp * 11 / 5, context)
     // Negative sign since we will draw the date text higher.
@@ -134,17 +134,28 @@ class MonthView(context: Context, attrs: AttributeSet) extends View(context, att
       for (col <- 0 until itemsPerRow) {
         val index = row * itemsPerRow + col
         if (index < daysPerMonth) {
-          // Write sexagenary text, in horizontal way.
           var x = dateStartX + col * gridWidth
           var y = dateStartY + row * gridHeight
+
+          // Handle the currently selected date.
+          if (index == chineseDate.dayDiff()) {
+            paint.setColor(selectedBackgroundColor)
+            paint.setStyle(Paint.Style.FILL)
+            canvas.drawOval(x - gridWidth / 9, y - gridHeight * 7 / 10,
+              x + gridWidth * 8 / 9, y + gridHeight * 3 / 10, paint)
+          }
+          val sColor = if (index == chineseDate.dayDiff()) selectedDateColor else sexagenaryColor
+          val dColor = if (index == chineseDate.dayDiff()) selectedDateColor else dateColor          
+
+          // Write sexagenary text, in horizontal way.
           paint.setTextSize(sexagenaryTextSizePx)
-          paint.setColor(sexagenaryColor)
+          paint.setColor(sColor)
           canvas.drawText(sexagenaryTexts(index), x, y, paint)
 
           // Write date text, in vertical way.
           val dateText = Dates(index)
           paint.setTextSize(dateTextSizePx)
-          paint.setColor(dateColor)          
+          paint.setColor(dColor)          
           x += dateOffsetX
           y += dateOffsetY
           canvas.drawText(dateText.substring(0, 1), x, y, paint)
@@ -168,7 +179,7 @@ class MonthView(context: Context, attrs: AttributeSet) extends View(context, att
       }
 
       if (newChineseDate != null)
-        searchActivity.showMonthView(newChineseDate)
+        searchActivity.queryAndShow(newChineseDate.toString())
 
       true
     }
