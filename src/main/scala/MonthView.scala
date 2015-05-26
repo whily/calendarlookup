@@ -40,7 +40,12 @@ class MonthView(context: Context, attrs: AttributeSet) extends View(context, att
   // Assuming one data occuipies one grid.
   private val gridWidth = sp2px(sexagenaryTextSizeSp * 7 / 2, context)
   private val gridHeight = sp2px(sexagenaryTextSizeSp * 5 / 3, context)
+  private var calendarLeft = 0.0
+  private var calendarTop = 0.0
+  private var calendarRight = 0.0
+  private var calendarBottom = 0.0  
   private val maxItemsPerRow = 6
+  private var itemsPerRow = maxItemsPerRow
 
   private val paint = new Paint()
   paint.setAntiAlias(true)
@@ -65,7 +70,7 @@ class MonthView(context: Context, attrs: AttributeSet) extends View(context, att
     assert((daysPerMonth == 29) || (daysPerMonth == 30))
     val sexagenaryTexts = sexagenaries(sexagenary1stDay, daysPerMonth)
 
-    var itemsPerRow = Math.floor(canvas.getWidth() * 1.0 / gridWidth).toInt
+    itemsPerRow = Math.floor(canvas.getWidth() * 1.0 / gridWidth).toInt
     if (itemsPerRow > maxItemsPerRow) {
       itemsPerRow = maxItemsPerRow
     }
@@ -130,6 +135,13 @@ class MonthView(context: Context, attrs: AttributeSet) extends View(context, att
     // Set the height.
     getLayoutParams().height = viewHeight.toInt
 
+    val leftOffset = - gridWidth / 9
+    val topOffset = - gridHeight * 7 / 10
+    calendarLeft = dateStartX + leftOffset
+    calendarTop = dateStartY + topOffset
+    calendarRight = calendarLeft + itemsPerRow * gridWidth
+    calendarBottom = calendarTop + rows * gridHeight
+
     for (row <- 0 until rows) {
       for (col <- 0 until itemsPerRow) {
         val index = row * itemsPerRow + col
@@ -141,8 +153,8 @@ class MonthView(context: Context, attrs: AttributeSet) extends View(context, att
           if (index == chineseDate.dayDiff()) {
             paint.setColor(selectedBackgroundColor)
             paint.setStyle(Paint.Style.FILL)
-            canvas.drawOval(x - gridWidth / 9, y - gridHeight * 7 / 10,
-              x + gridWidth * 8 / 9, y + gridHeight * 3 / 10, paint)
+            canvas.drawOval(x + leftOffset, y + topOffset,
+              x + gridWidth + leftOffset, y + gridHeight + topOffset, paint)
           }
           val sColor = if (index == chineseDate.dayDiff()) selectedDateColor else sexagenaryColor
           val dColor = if (index == chineseDate.dayDiff()) selectedDateColor else dateColor          
@@ -175,7 +187,17 @@ class MonthView(context: Context, attrs: AttributeSet) extends View(context, att
       } else if (e2.getY() - e1.getY() < -threshold) {
         newChineseDate = chineseDate.firstDayNextMonth(false)        
       } else if (e2.getX() - e1.getX() > threshold) {
+        // Last year. TODO: fix the hack.
+        newChineseDate = chineseDate
+        for (i <- 0 until 12) {
+          newChineseDate = newChineseDate.lastDayPrevMonth(false)
+        }
       } else if (e2.getX() - e1.getX() < -threshold) {
+        // Next year. TODO: fix the hack.
+        newChineseDate = chineseDate
+        for (i <- 0 until 12) {
+          newChineseDate = newChineseDate.firstDayNextMonth(false)
+        }        
       }
 
       if (newChineseDate != null)
@@ -184,10 +206,18 @@ class MonthView(context: Context, attrs: AttributeSet) extends View(context, att
       true
     }
 
-    override def onShowPress(event: MotionEvent) {
-    }
-
     override def onSingleTapConfirmed(event: MotionEvent): Boolean = {
+      val x = event.getX()
+      val y = event.getY()
+
+      if ((calendarLeft <= x) && (x < calendarRight) && (calendarTop < y) && (y < calendarBottom)) {
+        val rowIndex = Math.floor((y - calendarTop) / gridHeight).toInt
+        val colIndex = Math.floor((x - calendarLeft) / gridWidth).toInt
+        val index = rowIndex * itemsPerRow + colIndex
+        val newChineseDate = chineseDate.plusDays(index - chineseDate.dayDiff())
+        searchActivity.queryAndShow(newChineseDate.toString())
+      }
+
       true
     }        
   }  
