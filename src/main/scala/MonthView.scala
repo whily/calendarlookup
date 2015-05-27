@@ -16,6 +16,7 @@ import android.content.Context
 import android.graphics.{Canvas, Color, Paint}
 import android.util.AttributeSet
 import android.view.{GestureDetector, MotionEvent, View}
+import android.view.View.MeasureSpec
 import net.whily.scaland.Util._
 import net.whily.chinesecalendar.ChineseCalendar
 import net.whily.chinesecalendar.ChineseCalendar._
@@ -46,6 +47,16 @@ class MonthView(context: Context, attrs: AttributeSet) extends View(context, att
   private var calendarBottom = 0.0  
   private val maxItemsPerRow = 6
   private var itemsPerRow = maxItemsPerRow
+  private var viewWidth = 0.0f
+  private var viewHeight = 0.0f
+  private var left = 0
+  private var top = 0
+  private var yearX = 0.0f
+  private var yearY = 0.0f
+  private var monthX = 0.0f
+  private var monthY = 0.0f
+  private var rows = 0
+  private var dateStartY = 0.0f
 
   private val paint = new Paint()
   paint.setAntiAlias(true)
@@ -56,10 +67,35 @@ class MonthView(context: Context, attrs: AttributeSet) extends View(context, att
     true
   }
 
-  //override protected onMeasure(widthSpec: Int, heightSpec: Int) {
-  //  val height = 1
-  //  setMeasuredDimension(widthSpec, height)
-  //}
+  // Calculate measures to determin the width/height of the view.
+  private def calculateMeasure(width: Int) { 
+    itemsPerRow = Math.floor(width * 1.0 / gridWidth).toInt
+    if (itemsPerRow > maxItemsPerRow) {
+      itemsPerRow = maxItemsPerRow
+    }
+
+    // Coordinates
+    // TODO: align MonthView with the buttones above.
+    left = getPaddingLeft() / 2
+    top = getPaddingTop() / 2
+    yearX = left + sp2px(10, context)
+    yearY = top + sp2px(30, context)    
+    monthX = yearX
+    monthY = yearY + gridHeight
+
+    dateStartY = monthY + gridHeight    
+
+    viewWidth = itemsPerRow * gridWidth + gridWidth * 0.1f
+
+    rows = Math.ceil(daysPerMonth * 1.0 / itemsPerRow).toInt
+    viewHeight = dateStartY + (rows - 0.5f) * gridHeight    
+  }
+
+  override protected def onMeasure(widthSpec: Int, heightSpec: Int) {
+    val width = MeasureSpec.getSize(widthSpec)
+    calculateMeasure(width)
+    setMeasuredDimension(widthSpec, if (showing) viewHeight.toInt else 0)
+  }
 
   override protected def onDraw(canvas: Canvas) {
     super.onDraw(canvas)
@@ -70,11 +106,9 @@ class MonthView(context: Context, attrs: AttributeSet) extends View(context, att
     assert((daysPerMonth == 29) || (daysPerMonth == 30))
     val sexagenaryTexts = sexagenaries(sexagenary1stDay, daysPerMonth)
 
-    itemsPerRow = Math.floor(canvas.getWidth() * 1.0 / gridWidth).toInt
-    if (itemsPerRow > maxItemsPerRow) {
-      itemsPerRow = maxItemsPerRow
-    }
-    val viewWidth = itemsPerRow * gridWidth + gridWidth * 0.1f
+    calculateMeasure(canvas.getWidth())
+    // Force to use the correct layout.
+    requestLayout()
 
     // Font color of light theme.
     var sexagenaryColor = Color.BLACK 
@@ -88,15 +122,6 @@ class MonthView(context: Context, attrs: AttributeSet) extends View(context, att
       sexagenaryColor = Color.WHITE
       dateColor = Color.LTGRAY
     }
-
-    // Coordinates
-    // TODO: align MonthView with the buttones above.
-    val left = getPaddingLeft() / 2
-    val top = getPaddingTop() / 2
-    val yearX = left + sp2px(10, context)
-    val yearY = top + sp2px(30, context)    
-    val monthX = yearX
-    val monthY = yearY + gridHeight
 
     // Draw bar for year and month text.
     paint.setColor(barColor)
@@ -114,11 +139,8 @@ class MonthView(context: Context, attrs: AttributeSet) extends View(context, att
     paint.setColor(yearMonthColor)
     canvas.drawText(month, monthX, monthY, paint)
 
-    // TODO: mark the current date
-
     // Start coordinates for dates
     val dateStartX = yearX
-    val dateStartY = monthY + gridHeight
     // Offset for dates.
     val dateOffsetX = sp2px(sexagenaryTextSizeSp * 11 / 5, context)
     // Negative sign since we will draw the date text higher.
@@ -126,14 +148,9 @@ class MonthView(context: Context, attrs: AttributeSet) extends View(context, att
     // We're writing the date in vertical way. So we need another offset for the 2nd character.
 
     // Draw the outline of month view.
-    val rows = Math.ceil(daysPerMonth * 1.0 / itemsPerRow).toInt
-    val viewHeight = dateStartY + (rows - 0.5f) * gridHeight
     paint.setColor(barColor)
     paint.setStyle(Paint.Style.STROKE)
     canvas.drawRect(left, top, left + viewWidth, viewHeight, paint)
-
-    // Set the height.
-    getLayoutParams().height = viewHeight.toInt
 
     val leftOffset = - gridWidth / 9
     val topOffset = - gridHeight * 7 / 10
