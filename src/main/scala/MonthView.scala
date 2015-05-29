@@ -30,6 +30,7 @@ class MonthView(context: Context, attrs: AttributeSet) extends View(context, att
   var month = ""            // Month information
   var sexagenary1stDay = "" // The sexagenary of the 1st day of the month.
   var daysPerMonth = 30     // Number of days per month. Can only be 29 or 30
+  var leftMargin = 0
 
   // Detect gestures of touch and scroll.
   private val gestureDetector = new GestureDetector(context, new MyGestureListener())
@@ -76,7 +77,7 @@ class MonthView(context: Context, attrs: AttributeSet) extends View(context, att
 
     // Coordinates
     // TODO: align MonthView with the buttones above.
-    left = getPaddingLeft() / 2
+    left = leftMargin
     top = getPaddingTop() / 2
     yearX = left + sp2px(10, context)
     yearY = top + sp2px(30, context)    
