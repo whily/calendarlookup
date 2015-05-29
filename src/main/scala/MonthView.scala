@@ -199,17 +199,36 @@ class MonthView(context: Context, attrs: AttributeSet) extends View(context, att
     override def onFling(e1: MotionEvent, e2: MotionEvent, velocityX: Float, velocityY: Float): Boolean = {
       val threshold = sp2px(30, context)
       var newChineseDate: ChineseCalendar = null
-      if (e2.getY() - e1.getY() > threshold) {
+      val deltaY = e2.getY() - e1.getY()
+      val deltaX = e2.getX() - e1.getX()
+      val absDeltaX = Math.abs(deltaX)
+      val absDeltaY = Math.abs(deltaY)
+
+      // If xEnabled, then movement in x-axis is considered.
+      // Similarly, if yEnabled, movement in y-axis is considered.
+      // The intention is to determine to honor the axis with maximum
+      // movement when threshold is reached for both axes.
+      var xEnabled = false
+      var yEnabled = false
+      if ((absDeltaX > threshold) && (absDeltaY > threshold)) {
+        if (absDeltaX > absDeltaY) xEnabled = true
+        else yEnabled = true
+      } else {
+        xEnabled = true
+        yEnabled = true
+      }
+
+      if ((deltaY > threshold) && yEnabled) {
         newChineseDate = chineseDate.lastDayPrevMonth(false)
-      } else if (e2.getY() - e1.getY() < -threshold) {
+      } else if ((deltaY < -threshold) && yEnabled) {
         newChineseDate = chineseDate.firstDayNextMonth(false)        
-      } else if (e2.getX() - e1.getX() > threshold) {
+      } else if ((deltaX > threshold) && xEnabled) {
         // Last year. TODO: fix the hack.
         newChineseDate = chineseDate
         for (i <- 0 until 12) {
           newChineseDate = newChineseDate.lastDayPrevMonth(false)
         }
-      } else if (e2.getX() - e1.getX() < -threshold) {
+      } else if ((deltaX < -threshold) && xEnabled) {
         // Next year. TODO: fix the hack.
         newChineseDate = chineseDate
         for (i <- 0 until 12) {
