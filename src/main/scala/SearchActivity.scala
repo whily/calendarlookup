@@ -18,6 +18,7 @@ import android.os.Bundle
 import android.text.{Editable, TextWatcher}
 import android.view.{Menu, MenuItem, MotionEvent, View}
 import android.view.inputmethod.InputMethodManager
+import android.view.ViewGroup.MarginLayoutParams
 import android.util.{Log, TypedValue}
 import android.widget.{AdapterView, ArrayAdapter, AutoCompleteTextView, Button, TextView}
 import net.whily.scaland.{ExceptionHandler, Util}
@@ -94,9 +95,11 @@ class SearchActivity extends Activity {
         }
       })
     }
+    val lp = altCalendarButton1.getLayoutParams().asInstanceOf[MarginLayoutParams]
 
     monthView = findViewById(R.id.month).asInstanceOf[MonthView]
     monthView.searchActivity = this
+    monthView.leftMargin = lp.leftMargin
 
     clearButton = findViewById(R.id.clear_button).asInstanceOf[Button]
     clearButton.setOnClickListener(new View.OnClickListener() {
