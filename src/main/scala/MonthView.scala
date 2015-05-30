@@ -37,7 +37,8 @@ class MonthView(context: Context, attrs: AttributeSet) extends View(context, att
 
   private val sexagenaryTextSizeSp = 18
   private val dateTextSizeSp = (sexagenaryTextSizeSp * 0.6).toInt
-  private val sexagenaryTextSizePx = sp2px(sexagenaryTextSizeSp, context)  
+  private val sexagenaryTextSizePx = sp2px(sexagenaryTextSizeSp, context)
+  private val monthTextSizePx = sp2px(sexagenaryTextSizeSp * 1.3f, context)    
   private val dateTextSizePx = sp2px(dateTextSizeSp, context)
   // Assuming one data occuipies one grid.
   private val gridWidth = sp2px(sexagenaryTextSizeSp * 7 / 2, context)
@@ -82,9 +83,9 @@ class MonthView(context: Context, attrs: AttributeSet) extends View(context, att
     yearX = left + sp2px(10, context)
     yearY = top + sp2px(30, context)    
     monthX = yearX
-    monthY = yearY + gridHeight
+    monthY = yearY + gridHeight * 1.2f
 
-    dateStartY = monthY + gridHeight    
+    dateStartY = monthY + gridHeight * 1.4f
 
     viewWidth = itemsPerRow * gridWidth + gridWidth * 0.1f
 
@@ -127,18 +128,22 @@ class MonthView(context: Context, attrs: AttributeSet) extends View(context, att
     // Draw bar for year and month text.
     paint.setColor(barColor)
     paint.setStyle(Paint.Style.FILL)
-    canvas.drawRect(left, top, left + viewWidth, monthY + gridHeight * 0.15f, paint)
+    canvas.drawRect(left, top, left + viewWidth, monthY + gridHeight * 0.35f, paint)
 
     // Show year.
     paint.setTextSize(sexagenaryTextSizePx)
     paint.setColor(yearMonthColor)
-    canvas.drawText(year, yearX, yearY, paint)
+    val yearTextWidth = paint.measureText(year)
+    canvas.drawText(year, left + (viewWidth - yearTextWidth) / 2, yearY, paint)
 
     // Show month.
 
-    paint.setTextSize(sexagenaryTextSizePx)
+    paint.setTextSize(monthTextSizePx)
     paint.setColor(yearMonthColor)
-    canvas.drawText(month, monthX, monthY, paint)
+    paint.setFakeBoldText(true)
+    val monthTextWidth = paint.measureText(month)    
+    canvas.drawText(month, left + (viewWidth - monthTextWidth) / 2, monthY, paint)
+    paint.setFakeBoldText(false)
 
     // Start coordinates for dates
     val dateStartX = yearX
