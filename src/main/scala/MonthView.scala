@@ -225,20 +225,20 @@ class MonthView(context: Context, attrs: AttributeSet) extends View(context, att
       }
 
       if ((deltaY > threshold) && yEnabled) {
-        newChineseDate = chineseDate.lastDayPrevMonth(false)
+        newChineseDate = chineseDate.sameDayPrevMonth()
       } else if ((deltaY < -threshold) && yEnabled) {
-        newChineseDate = chineseDate.firstDayNextMonth(false)        
+        newChineseDate = chineseDate.sameDayNextMonth()        
       } else if ((deltaX > threshold) && xEnabled) {
         // Last year. TODO: fix the hack.
         newChineseDate = chineseDate
         for (i <- 0 until 12) {
-          newChineseDate = newChineseDate.lastDayPrevMonth(false)
+          newChineseDate = newChineseDate.sameDayPrevMonth()
         }
       } else if ((deltaX < -threshold) && xEnabled) {
         // Next year. TODO: fix the hack.
         newChineseDate = chineseDate
         for (i <- 0 until 12) {
-          newChineseDate = newChineseDate.firstDayNextMonth(false)
+          newChineseDate = newChineseDate.sameDayNextMonth()
         }        
       }
 
