@@ -30,7 +30,6 @@ class MonthView(context: Context, attrs: AttributeSet) extends View(context, att
   var month = ""            // Month information
   var sexagenary1stDay = "" // The sexagenary of the 1st day of the month.
   var daysPerMonth = 30     // Number of days per month. Can only be 29 or 30
-  var leftMargin = 0
 
   // Detect gestures of touch and scroll.
   private val gestureDetector = new GestureDetector(context, new MyGestureListener())
@@ -51,8 +50,8 @@ class MonthView(context: Context, attrs: AttributeSet) extends View(context, att
   private var itemsPerRow = maxItemsPerRow
   private var viewWidth = 0.0f
   private var viewHeight = 0.0f
-  private var left = 0
-  private var top = 0
+  private var left = 0.0f
+  private var top = 0.0f
   private var yearX = 0.0f
   private var yearY = 0.0f
   private var monthX = 0.0f
@@ -77,20 +76,20 @@ class MonthView(context: Context, attrs: AttributeSet) extends View(context, att
     }
 
     // Coordinates
-    // TODO: align MonthView with the buttones above.
-    left = leftMargin
-    top = getPaddingTop() / 2
+    // Align MonthView with the buttones above by manually search the required margin.
+    left = sp2px(4, context)
+    top = getPaddingTop()
     yearX = left + sp2px(10, context)
-    yearY = top + sp2px(30, context)    
+    yearY = top + sp2px(25, context)    
     monthX = yearX
-    monthY = yearY + gridHeight * 1.2f
+    monthY = yearY + gridHeight * 1.05f
 
-    dateStartY = monthY + gridHeight * 1.4f
+    dateStartY = monthY + gridHeight * 1.3f
 
     viewWidth = itemsPerRow * gridWidth + gridWidth * 0.1f
 
     rows = Math.ceil(daysPerMonth * 1.0 / itemsPerRow).toInt
-    viewHeight = dateStartY + (rows - 0.5f) * gridHeight    
+    viewHeight = dateStartY + (rows - 0.45f) * gridHeight    
   }
 
   override protected def onMeasure(widthSpec: Int, heightSpec: Int) {
@@ -128,7 +127,7 @@ class MonthView(context: Context, attrs: AttributeSet) extends View(context, att
     // Draw bar for year and month text.
     paint.setColor(barColor)
     paint.setStyle(Paint.Style.FILL)
-    canvas.drawRect(left, top, left + viewWidth, monthY + gridHeight * 0.35f, paint)
+    canvas.drawRect(left, top, left + viewWidth, monthY + gridHeight * 0.3f, paint)
 
     // Show year.
     paint.setTextSize(sexagenaryTextSizePx)
