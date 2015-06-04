@@ -27,6 +27,7 @@ class MonthView(context: Context, attrs: AttributeSet) extends View(context, att
   var chineseDate: ChineseCalendar = null
   var showing = false       // Whether to show the month view.
   var year = ""             // Year information
+  var yearSexagenary = ""   // Sexagenary of the year
   var month = ""            // Month information
   var sexagenary1stDay = "" // The sexagenary of the 1st day of the month.
   var daysPerMonth = 30     // Number of days per month. Can only be 29 or 30
@@ -37,7 +38,8 @@ class MonthView(context: Context, attrs: AttributeSet) extends View(context, att
   private val sexagenaryTextSizeSp = 18
   private val dateTextSizeSp = (sexagenaryTextSizeSp * 0.6).toInt
   private val sexagenaryTextSizePx = sp2px(sexagenaryTextSizeSp, context)
-  private val monthTextSizePx = sp2px(sexagenaryTextSizeSp * 1.3f, context)    
+  private val monthTextSizePx = sp2px(sexagenaryTextSizeSp * 1.3f, context)
+  private val yearSexagenaryTextSizePx = sp2px(sexagenaryTextSizeSp * 0.8f, context)
   private val dateTextSizePx = sp2px(dateTextSizeSp, context)
   // Assuming one data occuipies one grid.
   private val gridWidth = sp2px(sexagenaryTextSizeSp * 7 / 2, context)
@@ -52,8 +54,6 @@ class MonthView(context: Context, attrs: AttributeSet) extends View(context, att
   private var viewHeight = 0.0f
   private var left = 0.0f
   private var top = 0.0f
-  private var yearX = 0.0f
-  private var yearY = 0.0f
   private var monthX = 0.0f
   private var monthY = 0.0f
   private var rows = 0
@@ -79,17 +79,14 @@ class MonthView(context: Context, attrs: AttributeSet) extends View(context, att
     // Align MonthView with the buttones above by manually search the required margin.
     left = sp2px(4, context)
     top = getPaddingTop()
-    yearX = left + sp2px(10, context)
-    yearY = top + sp2px(25, context)    
-    monthX = yearX
-    monthY = yearY + gridHeight * 1.05f
-
+    monthX = left + sp2px(10, context)
+    monthY = top + sp2px(35, context)    
     dateStartY = monthY + gridHeight * 1.3f
 
     viewWidth = itemsPerRow * gridWidth + gridWidth * 0.1f
 
     rows = Math.ceil(daysPerMonth * 1.0 / itemsPerRow).toInt
-    viewHeight = dateStartY + (rows - 0.45f) * gridHeight    
+    viewHeight = dateStartY + (rows - 0.4f) * gridHeight    
   }
 
   override protected def onMeasure(widthSpec: Int, heightSpec: Int) {
@@ -118,7 +115,9 @@ class MonthView(context: Context, attrs: AttributeSet) extends View(context, att
     var barColor = cyan 
     var selectedDateColor = cyan 
     var selectedBackgroundColor = Color.rgb(182, 217, 214) 
-    var yearMonthColor = Color.WHITE 
+    var yearMonthColor = Color.WHITE
+    // We need a color lighter than Color.LTGRAY
+    var yearSexagenaryColor = Color.rgb(228, 228, 228)
     if (getThemePref(context) == 0) { // Dark theme
       sexagenaryColor = Color.WHITE
       dateColor = Color.LTGRAY
@@ -127,25 +126,36 @@ class MonthView(context: Context, attrs: AttributeSet) extends View(context, att
     // Draw bar for year and month text.
     paint.setColor(barColor)
     paint.setStyle(Paint.Style.FILL)
-    canvas.drawRect(left, top, left + viewWidth, monthY + gridHeight * 0.3f, paint)
+    canvas.drawRect(left, top, left + viewWidth, monthY + gridHeight * 0.4f, paint)
+
+    // Show month.
+    paint.setTextSize(monthTextSizePx)
+    paint.setColor(yearMonthColor)
+    paint.setFakeBoldText(true)
+    // Left padding so month text is right aligned. Intention is to avoid
+    // the position change of year text due to month name length change.
+    // Note that the space character below is full-width. For details, see
+    //   http://www.unicode.org/reports/tr11/tr11-11.html
+    val monthText = "　" * (4 - month.length) + month
+    val monthTextWidth = paint.measureText(monthText)    
+    canvas.drawText(monthText, monthX, monthY, paint)
+    paint.setFakeBoldText(false)
 
     // Show year.
     paint.setTextSize(sexagenaryTextSizePx)
     paint.setColor(yearMonthColor)
-    val yearTextWidth = paint.measureText(year)
-    canvas.drawText(year, left + (viewWidth - yearTextWidth) / 2, yearY, paint)
+    val yearX = monthX + monthTextWidth + sp2px(5, context)
+    val yearY = monthY - sexagenaryTextSizePx * 0.7f    
+    canvas.drawText(year, yearX, yearY, paint)
 
-    // Show month.
-
-    paint.setTextSize(monthTextSizePx)
-    paint.setColor(yearMonthColor)
-    paint.setFakeBoldText(true)
-    val monthTextWidth = paint.measureText(month)    
-    canvas.drawText(month, left + (viewWidth - monthTextWidth) / 2, monthY, paint)
-    paint.setFakeBoldText(false)
+    // Show year sexagenary.
+    paint.setTextSize(yearSexagenaryTextSizePx)
+    paint.setColor(yearSexagenaryColor)
+    val yearSexagenaryY = yearY + yearSexagenaryTextSizePx * 1.3f
+    canvas.drawText(yearSexagenary, yearX, yearSexagenaryY, paint)    
 
     // Start coordinates for dates
-    val dateStartX = yearX
+    val dateStartX = monthX
     // Offset for dates.
     val dateOffsetX = sp2px(sexagenaryTextSizeSp * 11 / 5, context)
     // Negative sign since we will draw the date text higher.
