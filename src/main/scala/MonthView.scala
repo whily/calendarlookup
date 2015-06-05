@@ -233,22 +233,27 @@ class MonthView(context: Context, attrs: AttributeSet) extends View(context, att
         yEnabled = true
       }
 
-      if ((deltaY > threshold) && yEnabled) {
-        newChineseDate = chineseDate.sameDayPrevMonth()
-      } else if ((deltaY < -threshold) && yEnabled) {
-        newChineseDate = chineseDate.sameDayNextMonth()        
-      } else if ((deltaX > threshold) && xEnabled) {
-        // Last year. TODO: fix the hack.
-        newChineseDate = chineseDate
-        for (i <- 0 until 12) {
-          newChineseDate = newChineseDate.sameDayPrevMonth()
+      try {
+        if ((deltaY > threshold) && yEnabled) {
+          newChineseDate = chineseDate.sameDayPrevMonth()
+        } else if ((deltaY < -threshold) && yEnabled) {
+          newChineseDate = chineseDate.sameDayNextMonth()
+        } else if ((deltaX > threshold) && xEnabled) {
+          // Last year. TODO: fix the hack.
+          newChineseDate = chineseDate
+          for (i <- 0 until 12) {
+            newChineseDate = newChineseDate.sameDayPrevMonth()
+          }
+        } else if ((deltaX < -threshold) && xEnabled) {
+          // Next year. TODO: fix the hack.
+          newChineseDate = chineseDate
+          for (i <- 0 until 12) {
+            newChineseDate = newChineseDate.sameDayNextMonth()
+          }
         }
-      } else if ((deltaX < -threshold) && xEnabled) {
-        // Next year. TODO: fix the hack.
-        newChineseDate = chineseDate
-        for (i <- 0 until 12) {
-          newChineseDate = newChineseDate.sameDayNextMonth()
-        }        
+      } catch {
+        // TODO: select a meaninigful error message.
+        case ex: Exception => toast(searchActivity, "Unable to change date")
       }
 
       if (newChineseDate != null)
