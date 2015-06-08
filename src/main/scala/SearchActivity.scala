@@ -26,6 +26,7 @@ import net.whily.chinesecalendar.ChineseCalendar._
 import net.whily.chinesecalendar.Chinese._
 
 class SearchActivity extends Activity {
+  private var inputView: InputView = null
   private var bar: ActionBar = null
   private var searchEntry: AutoCompleteTextView = null
   private var clearButton: Button = null
@@ -90,10 +91,13 @@ class SearchActivity extends Activity {
     for (altCalendarButton <- altCalendarButtons) {
       altCalendarButton.setOnClickListener(new View.OnClickListener() {
         override def onClick(v: View) {
-          queryAndShow(altCalendarButton.getText().toString())
+          queryAndShowSafe(altCalendarButton.getText().toString())
         }
       })
     }
+
+    inputView = findViewById(R.id.input).asInstanceOf[InputView]
+    inputView.searchActivity = this
 
     monthView = findViewById(R.id.month).asInstanceOf[MonthView]
     monthView.searchActivity = this
@@ -121,18 +125,7 @@ class SearchActivity extends Activity {
           clearButton.setVisibility(View.VISIBLE)
         }
 
-        try {
-          queryAndShow(s.toString)
-        } catch {
-          case ex: Exception =>
-            jgCalendarTextView.setText("" + ex)
-            for (i <- 0 until altCalendarButtons.length) {
-              altCalendarButtons(i).setVisibility(View.GONE)
-            }
-            monthView.showing = false
-            monthView.setVisibility(View.GONE)
-            monthView.invalidate()
-        }
+        queryAndShowSafe(s.toString)
       }
 
       override def beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {
@@ -182,10 +175,29 @@ class SearchActivity extends Activity {
     }
     showMonthView(parseDate(chineseDateText))
   }
+
+  def queryAndShowSafe(s: String) {
+    try {
+      queryAndShow(s.toString)
+    } catch {
+      case ex: Exception =>
+        jgCalendarTextView.setText("" + ex)
+        for (i <- 0 until altCalendarButtons.length) {
+          altCalendarButtons(i).setVisibility(View.GONE)
+        }
+        monthView.showing = false
+        monthView.setVisibility(View.GONE)
+        monthView.invalidate()
+    }
+  }
+
+  def addInput(input: String) {
+    searchEntry.setText(searchEntry.getText().toString() + input)
+  }
   
   // Initialize the contents of the widgets.
   private def initContents() {
-    val names = eraNames().map(s => s + "元年")
+    val names = eraNames()
     val displayChinese = Util.getChinesePref(this)
     if (displayChinese != "simplified") {
       displaySimplified = false
@@ -197,7 +209,10 @@ class SearchActivity extends Activity {
       override def onItemClick(parentView: AdapterView[_], selectedItemView: View, position: Int, id: Long) {
         //
       }    
-    })  
+    })
+
+    inputView.setCandidates(Array("1", "2", "3", "4", "5", "6", "7", "8", "9", "公"))
+    inputView.setVisibility(View.VISIBLE)
   }
 
   private def showMonthView(chineseDate: ChineseCalendar) {
