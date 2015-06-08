@@ -1,5 +1,5 @@
 /**
- * Class ExpandableListAdapter.
+ * Class MonthView.
  *
  * @author  Yujian Zhang <yujian{dot}zhang[at]gmail(dot)com>
  *
@@ -257,7 +257,7 @@ class MonthView(context: Context, attrs: AttributeSet) extends View(context, att
       }
 
       if (newChineseDate != null)
-        searchActivity.queryAndShow(newChineseDate.toString())
+        searchActivity.queryAndShowSafe(newChineseDate.toString())
 
       true
     }
@@ -270,8 +270,10 @@ class MonthView(context: Context, attrs: AttributeSet) extends View(context, att
         val rowIndex = Math.floor((y - calendarTop) / gridHeight).toInt
         val colIndex = Math.floor((x - calendarLeft) / gridWidth).toInt
         val index = rowIndex * itemsPerRow + colIndex
-        val newChineseDate = chineseDate.plusDays(index - chineseDate.dayDiff())
-        searchActivity.queryAndShow(newChineseDate.toString())
+        if (index < daysPerMonth) {
+          val newChineseDate = chineseDate.plusDays(index - chineseDate.dayDiff())
+          searchActivity.queryAndShow(newChineseDate.toString())
+        }
       }
 
       true
