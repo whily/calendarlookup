@@ -192,7 +192,9 @@ class SearchActivity extends Activity {
   }
 
   def addInput(input: String) {
-    searchEntry.setText(searchEntry.getText().toString() + input)
+    val newText = searchEntry.getText().toString() + input
+    searchEntry.setText(newText)
+    searchEntry.setSelection(newText.length)
   }
   
   // Initialize the contents of the widgets.
