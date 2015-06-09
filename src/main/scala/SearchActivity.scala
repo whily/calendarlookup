@@ -125,6 +125,8 @@ class SearchActivity extends Activity {
           clearButton.setVisibility(View.VISIBLE)
         }
 
+        checkInput()
+
         queryAndShowSafe(s.toString)
       }
 
@@ -176,6 +178,7 @@ class SearchActivity extends Activity {
     showMonthView(parseDate(chineseDateText))
   }
 
+  /** queryandShow with exception handling. */
   def queryAndShowSafe(s: String) {
     try {
       queryAndShow(s.toString)
@@ -191,10 +194,35 @@ class SearchActivity extends Activity {
     }
   }
 
+  /** Add character to the end of searchEntry. */
   def addInput(input: String) {
     val newText = searchEntry.getText().toString() + input
     searchEntry.setText(newText)
     searchEntry.setSelection(newText.length)
+  }
+
+  /** Prepare InputView based on the content of searchEntry. */
+  def checkInput() {
+    val query = simplified2Traditional(searchEntry.getText().toString())
+    val input = nextCharacter(query)
+    input match {
+      case null => // Show IME
+        inputView.setVisibility(View.GONE)
+
+      case Array("") => // Input is completed.
+        inputView.setVisibility(View.GONE)                
+        Util.hideSoftInput(this, searchEntry)
+
+      case Array(x) =>
+        addInput(normalizeChinese(x))
+        inputView.setVisibility(View.GONE)                
+        checkInput()
+
+      case _ =>
+        inputView.setCandidates(input.map(normalizeChinese(_)))
+        inputView.setVisibility(View.VISIBLE)
+        Util.hideSoftInput(this, searchEntry)
+    }
   }
   
   // Initialize the contents of the widgets.
@@ -213,8 +241,7 @@ class SearchActivity extends Activity {
       }    
     })
 
-    inputView.setCandidates(Array("1", "2", "3", "4", "5", "6", "7", "8", "9", "公"))
-    inputView.setVisibility(View.VISIBLE)
+    checkInput()
   }
 
   private def showMonthView(chineseDate: ChineseCalendar) {
