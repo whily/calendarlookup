@@ -1,5 +1,5 @@
 /**
- * Search activity for World Metro.
+ * Search activity for Calendar Lookup.
  *
  * @author  Yujian Zhang <yujian{dot}zhang[at]gmail(dot)com>
  *
@@ -127,7 +127,7 @@ class SearchActivity extends Activity {
 
         checkInput()
 
-        queryAndShowSafe(s.toString)
+        queryAndShowSafe(searchEntry.getText().toString)
       }
 
       override def beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {
@@ -145,8 +145,7 @@ class SearchActivity extends Activity {
     // Unify the search for inpu from both Chinese Calendar
     // and Julian/Gregorian Calendar.
 
-    // True if query is in form of Julian/Gregorian Calendar.
-    val jgEntry = Character.isDigit(queryText.charAt(0)) || queryText.startsWith("公元前")
+    val jgEntry = jgQuery(queryText)
 
     val actualQueryText = if (jgEntry) queryText else toDate(queryText).toString()
 
@@ -184,7 +183,7 @@ class SearchActivity extends Activity {
       queryAndShow(s.toString)
     } catch {
       case ex: Exception =>
-        jgCalendarTextView.setText("" + ex)
+        jgCalendarTextView.setText(Util.exceptionStack(ex))
         for (i <- 0 until altCalendarButtons.length) {
           altCalendarButtons(i).setVisibility(View.GONE)
         }
@@ -198,7 +197,7 @@ class SearchActivity extends Activity {
   def addInput(input: String) {
     val newText = searchEntry.getText().toString() + input
     searchEntry.setText(newText)
-    searchEntry.setSelection(newText.length)
+    Util.moveCursorToEnd(searchEntry)
   }
 
   /** Prepare InputView based on the content of searchEntry. */
@@ -215,7 +214,7 @@ class SearchActivity extends Activity {
 
       case Array(x) =>
         addInput(normalizeChinese(x))
-        inputView.setVisibility(View.GONE)                
+        inputView.setVisibility(View.GONE)
         checkInput()
 
       case _ =>
