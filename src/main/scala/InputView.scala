@@ -55,7 +55,7 @@ class InputView(context: Context, attrs: AttributeSet) extends View(context, att
   }
 
   def setCandidates(cs: Array[String]) {
-    if ((cs.length < 2) || (cs.exists(_.length != 1))) {
+    if ((cs.length < 1) || (cs.exists(_.length != 1))) {
       throw new IllegalArgumentException("setCandidates(): invalid candidates " +
         cs.mkString(" "))
     }

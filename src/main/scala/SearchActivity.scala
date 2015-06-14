@@ -38,6 +38,12 @@ class SearchActivity extends Activity {
     Array("晉穆帝永和九年", "晉穆帝永和九年三月", "晉穆帝永和九年三月初三", "晉穆帝永和九年三月丙辰", "353年4月22日")
   private val guideText = "..." // exampleText.mkString("\n")
   private var displaySimplified = true
+  // Since the app autmatically fills searchEntry if there is only one
+  // alternative, backspace mode is introduced to turn off this
+  // behavior, i.e. when user presses backspace, automatical filling
+  // is disabled until user enteres new text again.
+  private var backspaceMode = false
+  private var prevText = ""
   
   override def onCreate(icicle: Bundle) { 
     super.onCreate(icicle)
@@ -125,6 +131,11 @@ class SearchActivity extends Activity {
           clearButton.setVisibility(View.VISIBLE)
         }
 
+        val newText = searchEntry.getText().toString
+
+        backspaceMode = (newText.length == prevText.length - 1) && prevText.startsWith(newText)
+        prevText = newText
+
         checkInput()
 
         queryAndShowSafe(searchEntry.getText().toString)
@@ -204,6 +215,16 @@ class SearchActivity extends Activity {
   def checkInput() {
     val query = simplified2Traditional(searchEntry.getText().toString())
     val input = nextCharacter(query)
+
+    def showCandidates() {
+      inputView.setCandidates(input.map(normalizeChinese(_)))
+      inputView.setVisibility(View.VISIBLE)
+      // In backspace mode, keep IME open so user can press backspace again.
+      if (!backspaceMode) { 
+        Util.hideSoftInput(this, searchEntry)
+      }
+    }
+
     input match {
       case null => // Show IME
         inputView.setVisibility(View.GONE)
@@ -213,20 +234,25 @@ class SearchActivity extends Activity {
         Util.hideSoftInput(this, searchEntry)
 
       case Array(x) =>
-        addInput(normalizeChinese(x))
-        inputView.setVisibility(View.GONE)
-        checkInput()
+        if (!backspaceMode) {
+          addInput(normalizeChinese(x))
+          inputView.setVisibility(View.GONE)
+          checkInput()
+        } else {
+          showCandidates()
+        }
 
       case _ =>
-        inputView.setCandidates(input.map(normalizeChinese(_)))
-        inputView.setVisibility(View.VISIBLE)
-        Util.hideSoftInput(this, searchEntry)
+        showCandidates()
     }
   }
   
   // Initialize the contents of the widgets.
   private def initContents() {
-    val names = eraNames()
+    backspaceMode = false
+    prevText = ""
+
+    val names = eraNames()    
     val displayChinese = Util.getChinesePref(this)
     if (displayChinese != "simplified") {
       displaySimplified = false
