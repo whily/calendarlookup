@@ -272,6 +272,7 @@ class SearchActivity extends Activity {
   private def showMonthView(chineseDate: ChineseCalendar) {
     val yearSexagenary = "歲次" + chineseDate.yearSexagenary()
     monthView.chineseDate = chineseDate
+    monthView.selectedIndex = chineseDate.dayDiff()
     monthView.year = normalizeChinese(chineseDate.era + normalizeYear(chineseDate.year))
     monthView.yearSexagenary = normalizeChinese(yearSexagenary)
     monthView.month = normalizeChinese(normalizeMonth(chineseDate.month))

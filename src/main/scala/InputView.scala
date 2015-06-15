@@ -26,6 +26,7 @@ class InputView(context: Context, attrs: AttributeSet) extends View(context, att
   // Parameters that can be changed in the runtime.
   var searchActivity: SearchActivity = null
   private var candidates: Array[String] = null
+  private var selectedIndex = -1
 
   // Detect gestures of touch and scroll.
   private val gestureDetector = new GestureDetector(context, new MyGestureListener())
@@ -60,10 +61,7 @@ class InputView(context: Context, attrs: AttributeSet) extends View(context, att
         cs.mkString(" "))
     }
     candidates = cs
-  }
-
-  def clearCandidates() {
-    candidates = null
+    selectedIndex = -1
   }
 
   // Calculate measures to determin the width/height of the view.
@@ -95,7 +93,13 @@ class InputView(context: Context, attrs: AttributeSet) extends View(context, att
     // Force to use the correct layout.
     requestLayout()
 
-    paint.setColor(Color.LTGRAY)
+    val backgroundNormalColor = Color.rgb(228, 228, 228)
+    val backgroundSelectedColor = Color.rgb(190, 190, 190)
+    val textNormalColor = Color.rgb(140, 140, 140)
+    val textSelectedColor = Color.rgb(110, 110, 110)    
+    val lineColor = textNormalColor
+
+    paint.setColor(backgroundNormalColor)
     paint.setStyle(Paint.Style.FILL)
     canvas.drawRect(left, top, right, bottom, paint)
 
@@ -110,10 +114,19 @@ class InputView(context: Context, attrs: AttributeSet) extends View(context, att
           val lineX = (col + 1) * gridWidth
           val lineY = row * gridHeight
 
-          paint.setColor(Color.DKGRAY)
+          paint.setColor(lineColor)
           if (col < itemsPerRow - 1) {
             canvas.drawLine(lineX, lineY + 0.25f * gridHeight,
               lineX, lineY + 0.75f * gridHeight, paint)
+          }
+
+          if (index == selectedIndex) {
+            paint.setColor(backgroundSelectedColor)
+            canvas.drawRect((col + 0.05f) * gridWidth, lineY,
+              (col + 0.95f) * gridWidth, lineY + gridHeight, paint)
+            paint.setColor(textSelectedColor)
+          } else {
+            paint.setColor(textNormalColor)
           }
           canvas.drawText(candidates(index), textX, textY, paint)
         }
@@ -122,7 +135,7 @@ class InputView(context: Context, attrs: AttributeSet) extends View(context, att
   }
 
   private class MyGestureListener extends GestureDetector.SimpleOnGestureListener {
-    override def onSingleTapConfirmed(event: MotionEvent): Boolean = {
+    private def pressIndex(event: MotionEvent): Option[Int] = {
       val x = event.getX()
       val y = event.getY()
 
@@ -131,12 +144,49 @@ class InputView(context: Context, attrs: AttributeSet) extends View(context, att
         val colIndex = Math.floor((x - left) / gridWidth).toInt
         val index = rowIndex * itemsPerRow + colIndex
         if (index < candidates.length) {
-          val selectedInput = candidates(index)
-          searchActivity.addInput(selectedInput)
+          return Some(index)
         }
       }
 
+      None
+    }
+
+    private def tapInput(event: MotionEvent) {
+      pressIndex(event) match {
+        case Some(index) =>
+          val selectedInput = candidates(index)
+          searchActivity.addInput(selectedInput)          
+        case None =>
+      }    
+    }
+
+    override def onSingleTapConfirmed(event: MotionEvent): Boolean = {
+      tapInput(event)
       true
-    }        
+    }
+
+    override def onLongPress(event: MotionEvent) = {
+      tapInput(event)
+    }
+
+    override def onShowPress(event: MotionEvent) {
+      pressIndex(event) match {
+        case Some(index) =>
+          selectedIndex = index
+          invalidate()
+        case None =>
+      }      
+    }
+
+    override def onFling(e1: MotionEvent, e2: MotionEvent, velocityX: Float, velocityY: Float): Boolean = {
+      val threshold = sp2px(8, context)
+      val deltaX = Math.abs(e2.getX() - e1.getX())
+      val deltaY = Math.abs(e2.getY() - e1.getY())
+      if ((deltaX > threshold) || (deltaY > threshold)) {
+        selectedIndex = -1
+      }
+
+      true
+    }
   }  
 }

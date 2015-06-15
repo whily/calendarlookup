@@ -25,6 +25,7 @@ class MonthView(context: Context, attrs: AttributeSet) extends View(context, att
   // Parameters that can be changed in the runtime.
   var searchActivity: SearchActivity = null
   var chineseDate: ChineseCalendar = null
+  var selectedIndex = 0
   var showing = false       // Whether to show the month view.
   var year = ""             // Year information
   var yearSexagenary = ""   // Sexagenary of the year
@@ -182,14 +183,14 @@ class MonthView(context: Context, attrs: AttributeSet) extends View(context, att
           var y = dateStartY + row * gridHeight
 
           // Handle the currently selected date.
-          if (index == chineseDate.dayDiff()) {
+          if (index == selectedIndex) {
             paint.setColor(selectedBackgroundColor)
             paint.setStyle(Paint.Style.FILL)
             canvas.drawOval(x + leftOffset, y + topOffset,
               x + gridWidth + leftOffset, y + gridHeight + topOffset, paint)
           }
-          val sColor = if (index == chineseDate.dayDiff()) selectedDateColor else sexagenaryColor
-          val dColor = if (index == chineseDate.dayDiff()) selectedDateColor else dateColor          
+          val sColor = if (index == selectedIndex) selectedDateColor else sexagenaryColor
+          val dColor = if (index == selectedIndex) selectedDateColor else dateColor          
 
           // Write sexagenary text, in horizontal way.
           paint.setTextSize(sexagenaryTextSizePx)
@@ -262,7 +263,7 @@ class MonthView(context: Context, attrs: AttributeSet) extends View(context, att
       true
     }
 
-    override def onSingleTapConfirmed(event: MotionEvent): Boolean = {
+    private def pressIndex(event: MotionEvent): Option[Int] = {
       val x = event.getX()
       val y = event.getY()
 
@@ -271,12 +272,38 @@ class MonthView(context: Context, attrs: AttributeSet) extends View(context, att
         val colIndex = Math.floor((x - calendarLeft) / gridWidth).toInt
         val index = rowIndex * itemsPerRow + colIndex
         if (index < daysPerMonth) {
-          val newChineseDate = chineseDate.plusDays(index - chineseDate.dayDiff())
-          searchActivity.queryAndShow(newChineseDate.toString())
+          return Some(index)
         }
       }
 
+      None
+    }
+
+    private def tapDate(event: MotionEvent) {
+      pressIndex(event) match {
+        case Some(index) =>
+          val newChineseDate = chineseDate.plusDays(index - chineseDate.dayDiff())
+          searchActivity.queryAndShow(newChineseDate.toString())
+        case None =>
+      }      
+    }
+
+    override def onSingleTapConfirmed(event: MotionEvent): Boolean = {
+      tapDate(event)
       true
-    }        
+    }
+
+    override def onLongPress(event: MotionEvent) = {
+      tapDate(event)
+    }
+
+    override def onShowPress(event: MotionEvent) {
+      pressIndex(event) match {
+        case Some(index) =>
+          selectedIndex = index
+          invalidate()
+        case None =>
+      }      
+    }
   }  
 }
