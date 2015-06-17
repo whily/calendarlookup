@@ -69,11 +69,7 @@ class SearchActivity extends Activity {
 
   override def onOptionsItemSelected(item: MenuItem): Boolean = {
     item.getItemId match {
-      case android.R.id.home | R.id.about => 
-        startActivity(new Intent(this, classOf[AboutActivity]))
-        true
-        
-      case R.id.settings =>  
+      case android.R.id.home | R.id.settings =>  
         startActivityForResult(new Intent(this, classOf[SettingsActivity]), ResultSettings)
         true
     }

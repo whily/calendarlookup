@@ -1,6 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen
     xmlns:android="http://schemas.android.com/apk/res/android">
+  <PreferenceScreen
+    android:title="@string/app_name_ver"
+    android:summary="@string/app_more_info">
+    <intent android:action="android.intent.action.VIEW"
+            android:data="http://github.com/whily/calendarlookup" />
+  </PreferenceScreen>
   <PreferenceCategory
       android:title="@string/appearance_preference">
     <ListPreference 

@@ -8,6 +8,9 @@
   <string name="search_entry_hint">中历或西历年月日</string>
   
   <!--  Activity Settings -->
+  <string name="app_name_ver">中西历查询 v0.0.1</string>
+  <string name="app_more_info">Copyright © 2015 Yujian Zhang\n使用GNU GPL v2许可证\n点此访问GitHub源码"</string>
+
   <string name="appearance_preference">显示</string>
   <string name="theme_title_preference">主题</string>
   <string name="theme_dialog_title_preference">主题</string>
@@ -29,21 +32,4 @@
     <item>simplified</item> 
     <item>traditional</item> 
   </string-array>
-    
-  <!-- Activity About -->
-  <string name="whats_new">更新内容</string>
-  <string name="changelog">更新日志</string>
-  <string name="help_and_faq">帮助与常见问题</string>
-  <string name="other_programs">开发者的其他应用</string>
-  <string name="about_html">
-    <![CDATA[
-    <html>
-      <body>
-        <center><h3>中西历查询 v0.0.1</h3></center>
-        <center><h4>Copyright &copy; 2015 Yujian Zhang</h4></center>
-        <center><h4>License: <a href="http://www.gnu.org/licenses/gpl-2.0.html">GNU General Public License v2</a></h4></center>
-      </body>
-    </html>
-    ]]>
-  </string>  
 </resources>
