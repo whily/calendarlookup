@@ -39,7 +39,7 @@ class InputView(context: Context, attrs: AttributeSet) extends View(context, att
   paint.setStyle(Paint.Style.STROKE)
   paint.setTextSize(inputTextSizePx)
 
-  private val gridWidth = paint.measureText("一二三")
+  private val gridWidth = paint.measureText("一二")
   private val gridHeight = inputTextSizePx * 2
 
   private var left = 0.0f
