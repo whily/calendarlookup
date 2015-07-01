@@ -271,7 +271,7 @@ class SearchActivity extends Activity {
     monthView.selectedIndex = chineseDate.dayDiff()
     monthView.year = normalizeChinese(chineseDate.era + normalizeYear(chineseDate.year))
     monthView.yearSexagenary = normalizeChinese(yearSexagenary)
-    monthView.month = normalizeChinese(normalizeMonth(chineseDate.month))
+    monthView.month = normalizeChinese(normalizeMonth(chineseDate.month, chineseDate.era))
     monthView.sexagenary1stDay = sexagenary1stDayOfMonth(chineseDate)
     monthView.daysPerMonth = monthLength(chineseDate)
     monthView.showing = true
