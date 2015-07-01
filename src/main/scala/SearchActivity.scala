@@ -149,6 +149,10 @@ class SearchActivity extends Activity {
     val queryText = simplified2Traditional(s.toString())
     var altCalendars: Array[String] = null
 
+    if (queryText == "") {
+      setSearchEntryNames()
+    }
+
     // Unify the search for inpu from both Chinese Calendar
     // and Julian/Gregorian Calendar.
 
@@ -182,6 +186,7 @@ class SearchActivity extends Activity {
       Util.hideSoftInput(this, searchEntry)
     }
     showMonthView(parseDate(chineseDateText))
+    updateHistory(queryText)
   }
 
   /** queryandShow with exception handling. */
@@ -242,20 +247,27 @@ class SearchActivity extends Activity {
         showCandidates()
     }
   }
-  
+
+  private def getDisplayNames() = {
+    val names = getHistory.reverse.filter(_ != "") ++ eraNames()    
+    val displayChinese = Util.getChinesePref(this)
+    if (displayChinese != "simplified") {
+      displaySimplified = false
+    }
+    names.map(normalizeChinese(_))    
+  }
+
+  private def setSearchEntryNames() {
+    searchEntry.setAdapter(new CalendarArrayAdapter(this, R.layout.simple_dropdown_item_1line,
+      getDisplayNames()))    
+  }
+
   // Initialize the contents of the widgets.
   private def initContents() {
     backspaceMode = false
     prevText = ""
 
-    val names = eraNames()    
-    val displayChinese = Util.getChinesePref(this)
-    if (displayChinese != "simplified") {
-      displaySimplified = false
-    }
-    val displayNames = names.map(normalizeChinese(_))
-    searchEntry.setAdapter(new CalendarArrayAdapter(this, R.layout.simple_dropdown_item_1line,
-      displayNames))
+    setSearchEntryNames()
     searchEntry.setOnItemClickListener(new AdapterView.OnItemClickListener () {
       override def onItemClick(parentView: AdapterView[_], selectedItemView: View, position: Int, id: Long) {
         //
@@ -282,4 +294,34 @@ class SearchActivity extends Activity {
   private def normalizeChinese(s: String) =
     if (displaySimplified) traditional2Simplified(s)
     else s
+
+  private val historyPreference = "histrory_preference"
+  private val historySize = 7
+
+  /** Return previous search strings. History is stored as strings (in
+    * Traditional Chinese) separated with spaces. */
+  private def getHistory() = {
+    val history = Util.getSharedPref(this, historyPreference, "")
+    if (history == Array("")) Array[String]()
+    else history.split(" ")
+  }
+
+  /** Update the history with the new input string `s`. Oldest item is
+    * at the beginning. */
+  private def updateHistory(s: String) {
+    val t = simplified2Traditional(s)
+    var history = collection.mutable.ArrayBuffer[String]() ++= getHistory()
+    if (!history.exists(_.startsWith(t))) {
+      val i = history.indexWhere(t.startsWith(_))
+      if (i >= 0) {
+        history(i) = t
+      } else {
+        history += t
+        if (history.length > historySize) {
+          history.remove(0)
+        }
+      }
+    }
+    Util.setSharedPref(this, historyPreference, history.mkString(" "))
+  }
 }
