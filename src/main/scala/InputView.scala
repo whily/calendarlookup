@@ -93,10 +93,27 @@ class InputView(context: Context, attrs: AttributeSet) extends View(context, att
     // Force to use the correct layout.
     requestLayout()
 
-    val backgroundNormalColor = Color.rgb(228, 228, 228)
-    val backgroundSelectedColor = Color.rgb(190, 190, 190)
-    val textNormalColor = Color.rgb(140, 140, 140)
-    val textSelectedColor = Color.rgb(110, 110, 110)    
+    val backgroundNormalColorLight = Color.rgb(228, 228, 228)
+    val backgroundSelectedColorLight = Color.rgb(190, 190, 190)
+    val textNormalColorLight = Color.rgb(140, 140, 140)
+    val textSelectedColorLight = Color.rgb(110, 110, 110)
+    val backgroundNormalColorDark = Color.rgb(80, 80, 80)
+    val backgroundSelectedColorDark = Color.rgb(50, 50, 50)
+    val textNormalColorDark = backgroundNormalColorLight
+    val textSelectedColorDark = backgroundSelectedColorLight
+
+    var backgroundNormalColor = backgroundNormalColorLight
+    var backgroundSelectedColor = backgroundSelectedColorLight
+    var textNormalColor = textNormalColorLight
+    var textSelectedColor = textSelectedColorLight
+
+    if (getThemePref(context) == 0) { // Dark theme
+      backgroundNormalColor = backgroundNormalColorDark
+      backgroundSelectedColor = backgroundSelectedColorDark
+      textNormalColor = textNormalColorDark
+      textSelectedColor = textSelectedColorDark
+    }
+
     val lineColor = textNormalColor
 
     paint.setColor(backgroundNormalColor)
