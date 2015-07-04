@@ -245,8 +245,7 @@ class MonthView(context: Context, attrs: AttributeSet) extends View(context, att
           newChineseDate = chineseDate.sameDayNextYear()
         }
       } catch {
-        // TODO: select a meaninigful error message.
-        case ex: Exception => toast(searchActivity, "Unable to change date")
+        case ex: Exception => toast(searchActivity, yearRange())
       }
 
       if (newChineseDate != null)
