@@ -34,9 +34,7 @@ class SearchActivity extends Activity {
   private var altCalendarButtons: Array[Button] = null
   private var monthView: MonthView = null
   private val ResultSettings = 1
-  private val exampleText =
-    Array("晉穆帝永和九年", "晉穆帝永和九年三月", "晉穆帝永和九年三月初三", "晉穆帝永和九年三月丙辰", "353年4月22日")
-  private val guideText = "..." // exampleText.mkString("\n")
+  private val guideText = "......"
   private var displaySimplified = true
   // Since the app autmatically fills searchEntry if there is only one
   // alternative, backspace mode is introduced to turn off this
@@ -195,7 +193,7 @@ class SearchActivity extends Activity {
       queryAndShow(s.toString)
     } catch {
       case ex: Exception =>
-        jgCalendarTextView.setText(Util.exceptionStack(ex))
+        jgCalendarTextView.setText(guideText) //Util.exceptionStack(ex))
         for (i <- 0 until altCalendarButtons.length) {
           altCalendarButtons(i).setVisibility(View.GONE)
         }
