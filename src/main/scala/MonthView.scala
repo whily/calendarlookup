@@ -249,7 +249,7 @@ class MonthView(context: Context, attrs: AttributeSet) extends View(context, att
       }
 
       if (newChineseDate != null)
-        searchActivity.queryAndShowSafe(newChineseDate.toString())
+        searchActivity.queryAndShowSafe(newChineseDate.toString(), false)
 
       true
     }
@@ -274,7 +274,7 @@ class MonthView(context: Context, attrs: AttributeSet) extends View(context, att
       pressIndex(event) match {
         case Some(index) =>
           val newChineseDate = chineseDate.plusDays(index - chineseDate.dayDiff())
-          searchActivity.queryAndShow(newChineseDate.toString())
+          searchActivity.queryAndShow(newChineseDate.toString(), false)
         case None =>
       }      
     }

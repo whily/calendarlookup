@@ -91,7 +91,7 @@ class SearchActivity extends Activity {
     for (altCalendarButton <- altCalendarButtons) {
       altCalendarButton.setOnClickListener(new View.OnClickListener() {
         override def onClick(v: View) {
-          queryAndShowSafe(altCalendarButton.getText().toString())
+          queryAndShowSafe(altCalendarButton.getText().toString(), true)
         }
       })
     }
@@ -132,7 +132,7 @@ class SearchActivity extends Activity {
 
         checkInput()
 
-        queryAndShowSafe(searchEntry.getText().toString)
+        queryAndShowSafe(searchEntry.getText().toString, true)
       }
 
       override def beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {
@@ -143,7 +143,7 @@ class SearchActivity extends Activity {
     })
   }
 
-  def queryAndShow(s: String) {
+  def queryAndShow(s: String, historyUpdateNeeded: Boolean) {
     val queryText = simplified2Traditional(s.toString())
     var altCalendars: Array[String] = null
 
@@ -184,13 +184,15 @@ class SearchActivity extends Activity {
       Util.hideSoftInput(this, searchEntry)
     }
     showMonthView(parseDate(chineseDateText))
-    updateHistory(queryText)
+    if (historyUpdateNeeded) {
+      updateHistory(queryText)
+    }
   }
 
   /** queryandShow with exception handling. */
-  def queryAndShowSafe(s: String) {
+  def queryAndShowSafe(s: String, historyUpdateNeeded: Boolean) {
     try {
-      queryAndShow(s.toString)
+      queryAndShow(s.toString, historyUpdateNeeded)
     } catch {
       case ex: Exception =>
         jgCalendarTextView.setText(guideText) //Util.exceptionStack(ex))
