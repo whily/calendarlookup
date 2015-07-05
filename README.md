@@ -4,7 +4,7 @@
 Calendar Lookup
 ===============
 
-World Metro is An Android app to convert between historical Chinese
+Calendar Lookup is An Android app to convert between historical Chinese
 calendar and Julian/Gregorian calendar.  It is currently under
 development and is expected to have following features:
 
