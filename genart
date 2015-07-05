@@ -69,3 +69,4 @@ mkdir -p res/drawable-ldpi/ res/drawable-mdpi/ res/drawable-mdpi/ res/drawable-h
 
 cd art/
 ConvertToLauncherIcon ic_launcher_calendarlookup.svg
+inkscape -e ../play/ic_launcher_calendar.png -D -y 0.0 -w 512 -h 512 ic_launcher_calendarlookup.svg
