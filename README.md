@@ -1,6 +1,3 @@
-# calendarlookup
-
-
 Calendar Lookup
 ===============
 
@@ -8,9 +5,12 @@ Calendar Lookup is An Android app to convert between historical Chinese
 calendar and Julian/Gregorian calendar.  It is currently under
 development and is expected to have following features:
 
-* Years supported: CE 1-232.
+* Years supported: BCE 251 to CE 702.
 * Accurate to date.
 * Support both traditional/simplified Chinese input/display
+
+Android app can be downloaded from Goolge Play:
+  <https://play.google.com/store/apps/details?id=net.whily.android.calendarlookup>
 
 For more information about Calendar Lookup, please go to
   <https://github.com/whily/calendarlookup>
@@ -27,8 +27,8 @@ The following tools are needed to build Calendar Lookup from source:
   Note that JDK is preinstalled on Mac OS X and available via package manager
   on many Linux systems. 
 * Android SDK r23.0.5.
-* Scala (2.11.0)
-* sbt (0.13.5)
+* Scala (2.11.6)
+* sbt (0.13.8)
 * [Inkscape](http://inkscape.org) and [ImageMagick](http://www.imagemagick.org)
   to generate icons.
 
