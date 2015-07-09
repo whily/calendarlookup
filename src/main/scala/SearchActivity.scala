@@ -292,8 +292,9 @@ class SearchActivity extends Activity {
   }
 
   private def normalizeChinese(s: String) =
-    if (displaySimplified) traditional2Simplified(s)
-    else s
+    if (displaySimplified && (s != "乾")) {
+      traditional2Simplified(s)
+    } else s
 
   private val historyPreference = "histrory_preference"
   private val historySize = 7
