@@ -1,0 +1,17 @@
+Features:
+
+- Bidirectional lookup between Chinese Calendar and Julian/Gregorian Calendar.
+- Support the following dynasties between BCE 251 and CE 907. More data will be added in future versions.
+  * Qin, Western Han, Xin, Eastern Han
+  * Three Kingdoms (Wei, Shu, Wu)
+  * Western Jin, Eastern Jin
+  * Southern Dynasties (Liu Song, Southern Qi, Liang, Chen)
+  * Northern Dynasties (Northern Wei, Western Wei, Eastern Wei, Northern Zhou, Northern Qi)
+  * Sui, Tang
+- Flexible and efficient internal input method
+- Browse previous/next year/month with touch controls in Month view
+- Support both Simplified and Traditional Chinese for display and input
+- Support dark and light Material themes
+
+The app is free without IAP, advertisements, or any permission. The source code is in
+https://github.com/whily/calendarlookup/

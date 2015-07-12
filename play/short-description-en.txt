@@ -1,0 +1,4 @@
+Chinese Calendar Lookup
+
+A conversion tool between Chinese calendar and Julian/Gregorian
+calendar.
