@@ -245,7 +245,7 @@ class MonthView(context: Context, attrs: AttributeSet) extends View(context, att
           newChineseDate = chineseDate.sameDayNextYear()
         }
       } catch {
-        case ex: Exception => toast(searchActivity, yearRange())
+        case ex: Exception => toast(searchActivity, yearMonthRange())
       }
 
       if (newChineseDate != null)

@@ -11,7 +11,7 @@ libraryDependencies ++= Seq(
   "org.scalatest" %% "scalatest" % "2.2.0" % "test",
   "net.whily" %% "scasci" % "0.0.1-SNAPSHOT",
   "net.whily" %% "scaland" % "0.0.1-SNAPSHOT",
-  "net.whily" %% "chinesecalendar" % "0.1.0-SNAPSHOT")
+  "net.whily" %% "chinesecalendar" % "0.1.1-SNAPSHOT")
 
 platformTarget in Android := "android-22"
 

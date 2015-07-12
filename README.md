@@ -5,7 +5,7 @@ Calendar Lookup is An Android app to convert between historical Chinese
 calendar and Julian/Gregorian calendar.  It is currently under
 development and is expected to have following features:
 
-* Years supported: BCE 251 to CE 702.
+* Years supported: BCE 251 to CE 907.
 * Accurate to date.
 * Support both traditional/simplified Chinese input/display
 
