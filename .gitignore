@@ -3,6 +3,7 @@
 /res/drawable-*
 local.properties
 proguard.cfg
+*.apk
 *.class
 *.log
 .cache
