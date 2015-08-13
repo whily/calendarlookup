@@ -3,7 +3,7 @@
  *
  * @author  Yujian Zhang <yujian{dot}zhang[at]gmail(dot)com>
  *
- * License: 
+ * License:
  *   GNU General Public License v2
  *   http://www.gnu.org/licenses/gpl-2.0.html
  * Copyright (C) 2015 Yujian Zhang
@@ -14,6 +14,8 @@ package net.whily.android.calendarlookup
 import scala.collection.mutable
 import android.app.{ActionBar, Activity}
 import android.content.Intent
+import android.content.res.ColorStateList
+import android.graphics.Color
 import android.os.Bundle
 import android.text.{Editable, TextWatcher}
 import android.view.{Menu, MenuItem, MotionEvent, View}
@@ -42,8 +44,9 @@ class SearchActivity extends Activity {
   // is disabled until user enteres new text again.
   private var backspaceMode = false
   private var prevText = ""
-  
-  override def onCreate(icicle: Bundle) { 
+  private var defaultSearchTextColor: ColorStateList = null
+
+  override def onCreate(icicle: Bundle) {
     super.onCreate(icicle)
 
     // Set handler for uncaught exception raised from current activity.
@@ -51,35 +54,35 @@ class SearchActivity extends Activity {
 
     Misc.setMaterialTheme(this)
     setContentView(R.layout.search)
-    
+
     bar = getActionBar
     bar.setHomeButtonEnabled(true)
-     
+
     initWidgets()
-    initContents() 
+    initContents()
   }
 
   override def onCreateOptionsMenu(menu: Menu): Boolean = {
     getMenuInflater().inflate(R.menu.search, menu)
-    
+
     return super.onCreateOptionsMenu(menu)
-  }    
+  }
 
   override def onOptionsItemSelected(item: MenuItem): Boolean = {
     item.getItemId match {
-      case android.R.id.home | R.id.settings =>  
+      case android.R.id.home | R.id.settings =>
         startActivityForResult(new Intent(this, classOf[SettingsActivity]), ResultSettings)
         true
     }
   }
-  
+
   override def onActivityResult(requestCode: Int, resultCode: Int, data: Intent) {
     super.onActivityResult(requestCode, resultCode, data)
     requestCode match {
       case ResultSettings => recreate() // Trigger to apply new theme.
     }
-  } 
-  
+  }
+
   // Initialize the widgets. The contents are initialized in `initContent`.
   private def initWidgets() {
     jgCalendarTextView = findViewById(R.id.jg_calendar_textview).asInstanceOf[TextView]
@@ -106,14 +109,17 @@ class SearchActivity extends Activity {
     clearButton.setOnClickListener(new View.OnClickListener() {
       override def onClick(v: View) {
         searchEntry.setText("")
+        searchEntry.setTextColor(defaultSearchTextColor)
       }
     })
 
     searchEntry = findViewById(R.id.search_entry).asInstanceOf[AutoCompleteTextView]
     searchEntry.setThreshold(1)
+    defaultSearchTextColor = searchEntry.getTextColors()
     searchEntry.setOnTouchListener(new View.OnTouchListener() {
       override def onTouch(v: View, e: MotionEvent): Boolean = {
       	searchEntry.showDropDown()
+        searchEntry.setTextColor(defaultSearchTextColor)
       	false
       }
     })
@@ -221,7 +227,7 @@ class SearchActivity extends Activity {
       inputView.setCandidates(input.map(normalizeChinese(_)))
       inputView.setVisibility(View.VISIBLE)
       // In backspace mode, keep IME open so user can press backspace again.
-      if (!backspaceMode) { 
+      if (!backspaceMode) {
         Util.hideSoftInput(this, searchEntry)
       }
     }
@@ -231,7 +237,7 @@ class SearchActivity extends Activity {
         inputView.setVisibility(View.GONE)
 
       case Array("") => // Input is completed.
-        inputView.setVisibility(View.GONE)                
+        inputView.setVisibility(View.GONE)
         Util.hideSoftInput(this, searchEntry)
 
       case Array(x) =>
@@ -249,17 +255,17 @@ class SearchActivity extends Activity {
   }
 
   private def getDisplayNames() = {
-    val names = getHistory.reverse.filter(_ != "") ++ eraNames()    
+    val names = getHistory.reverse.filter(_ != "") ++ eraNames()
     val displayChinese = Util.getChinesePref(this)
     if (displayChinese != "simplified") {
       displaySimplified = false
     }
-    names.map(normalizeChinese(_))    
+    names.map(normalizeChinese(_))
   }
 
   private def setSearchEntryNames() {
     searchEntry.setAdapter(new CalendarArrayAdapter(this, R.layout.simple_dropdown_item_1line,
-      getDisplayNames()))    
+      getDisplayNames()))
   }
 
   // Initialize the contents of the widgets.
@@ -271,7 +277,7 @@ class SearchActivity extends Activity {
     searchEntry.setOnItemClickListener(new AdapterView.OnItemClickListener () {
       override def onItemClick(parentView: AdapterView[_], selectedItemView: View, position: Int, id: Long) {
         //
-      }    
+      }
     })
 
     checkInput()
@@ -324,5 +330,9 @@ class SearchActivity extends Activity {
       }
     }
     Util.setSharedPref(this, historyPreference, history.mkString(" "))
+  }
+
+  def dimSearchTextColor() {
+    searchEntry.setTextColor(Color.GRAY)
   }
 }

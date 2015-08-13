@@ -48,7 +48,7 @@ class MonthView(context: Context, attrs: AttributeSet) extends View(context, att
   private var calendarLeft = 0.0
   private var calendarTop = 0.0
   private var calendarRight = 0.0
-  private var calendarBottom = 0.0  
+  private var calendarBottom = 0.0
   private val maxItemsPerRow = 6
   private var itemsPerRow = maxItemsPerRow
   private var viewWidth = 0.0f
@@ -70,7 +70,7 @@ class MonthView(context: Context, attrs: AttributeSet) extends View(context, att
   }
 
   // Calculate measures to determin the width/height of the view.
-  private def calculateMeasure(width: Int) { 
+  private def calculateMeasure(width: Int) {
     itemsPerRow = Math.floor(width * 1.0 / gridWidth).toInt
     if (itemsPerRow > maxItemsPerRow) {
       itemsPerRow = maxItemsPerRow
@@ -81,13 +81,13 @@ class MonthView(context: Context, attrs: AttributeSet) extends View(context, att
     left = sp2px(4, context)
     top = getPaddingTop()
     monthX = left + sp2px(10, context)
-    monthY = top + sp2px(35, context)    
+    monthY = top + sp2px(35, context)
     dateStartY = monthY + gridHeight * 1.3f
 
     viewWidth = itemsPerRow * gridWidth + gridWidth * 0.1f
 
     rows = Math.ceil(daysPerMonth * 1.0 / itemsPerRow).toInt
-    viewHeight = dateStartY + (rows - 0.4f) * gridHeight    
+    viewHeight = dateStartY + (rows - 0.4f) * gridHeight
   }
 
   override protected def onMeasure(widthSpec: Int, heightSpec: Int) {
@@ -110,12 +110,12 @@ class MonthView(context: Context, attrs: AttributeSet) extends View(context, att
     requestLayout()
 
     // Font color of light theme.
-    var sexagenaryColor = Color.BLACK 
-    var dateColor = Color.DKGRAY 
+    var sexagenaryColor = Color.BLACK
+    var dateColor = Color.DKGRAY
     val cyan = Color.rgb(0, 150, 136)
-    var barColor = cyan 
-    var selectedDateColor = cyan 
-    var selectedBackgroundColor = Color.rgb(182, 217, 214) 
+    var barColor = cyan
+    var selectedDateColor = cyan
+    var selectedBackgroundColor = Color.rgb(182, 217, 214)
     var yearMonthColor = Color.WHITE
     // We need a color lighter than Color.LTGRAY
     var yearSexagenaryColor = Color.rgb(228, 228, 228)
@@ -138,7 +138,7 @@ class MonthView(context: Context, attrs: AttributeSet) extends View(context, att
     // Note that the space character below is full-width. For details, see
     //   http://www.unicode.org/reports/tr11/tr11-11.html
     val monthText = "　" * (4 - month.length) + month
-    val monthTextWidth = paint.measureText(monthText)    
+    val monthTextWidth = paint.measureText(monthText)
     canvas.drawText(monthText, monthX, monthY, paint)
     paint.setFakeBoldText(false)
 
@@ -146,14 +146,14 @@ class MonthView(context: Context, attrs: AttributeSet) extends View(context, att
     paint.setTextSize(sexagenaryTextSizePx)
     paint.setColor(yearMonthColor)
     val yearX = monthX + monthTextWidth + sp2px(5, context)
-    val yearY = monthY - sexagenaryTextSizePx * 0.7f    
+    val yearY = monthY - sexagenaryTextSizePx * 0.7f
     canvas.drawText(year, yearX, yearY, paint)
 
     // Show year sexagenary.
     paint.setTextSize(yearSexagenaryTextSizePx)
     paint.setColor(yearSexagenaryColor)
     val yearSexagenaryY = yearY + yearSexagenaryTextSizePx * 1.3f
-    canvas.drawText(yearSexagenary, yearX, yearSexagenaryY, paint)    
+    canvas.drawText(yearSexagenary, yearX, yearSexagenaryY, paint)
 
     // Start coordinates for dates
     val dateStartX = monthX
@@ -190,7 +190,7 @@ class MonthView(context: Context, attrs: AttributeSet) extends View(context, att
               x + gridWidth + leftOffset, y + gridHeight + topOffset, paint)
           }
           val sColor = if (index == selectedIndex) selectedDateColor else sexagenaryColor
-          val dColor = if (index == selectedIndex) selectedDateColor else dateColor          
+          val dColor = if (index == selectedIndex) selectedDateColor else dateColor
 
           // Write sexagenary text, in horizontal way.
           paint.setTextSize(sexagenaryTextSizePx)
@@ -200,7 +200,7 @@ class MonthView(context: Context, attrs: AttributeSet) extends View(context, att
           // Write date text, in vertical way.
           val dateText = Dates(index)
           paint.setTextSize(dateTextSizePx)
-          paint.setColor(dColor)          
+          paint.setColor(dColor)
           x += dateOffsetX
           y += dateOffsetY
           canvas.drawText(dateText.substring(0, 1), x, y, paint)
@@ -248,8 +248,10 @@ class MonthView(context: Context, attrs: AttributeSet) extends View(context, att
         case ex: Exception => toast(searchActivity, yearMonthRange())
       }
 
-      if (newChineseDate != null)
+      if (newChineseDate != null) {
         searchActivity.queryAndShowSafe(newChineseDate.toString(), false)
+        searchActivity.dimSearchTextColor()
+      }
 
       true
     }
@@ -275,8 +277,9 @@ class MonthView(context: Context, attrs: AttributeSet) extends View(context, att
         case Some(index) =>
           val newChineseDate = chineseDate.plusDays(index - chineseDate.dayDiff())
           searchActivity.queryAndShow(newChineseDate.toString(), false)
+          searchActivity.dimSearchTextColor()
         case None =>
-      }      
+      }
     }
 
     override def onSingleTapConfirmed(event: MotionEvent): Boolean = {
@@ -294,7 +297,7 @@ class MonthView(context: Context, attrs: AttributeSet) extends View(context, att
           selectedIndex = index
           invalidate()
         case None =>
-      }      
+      }
     }
-  }  
+  }
 }
