@@ -150,7 +150,7 @@ class SearchActivity extends Activity {
   }
 
   def queryAndShow(s: String, historyUpdateNeeded: Boolean) {
-    val queryText = simplified2Traditional(s.toString())
+    val queryText = simplified2Traditional2(s.toString())
     var altCalendars: Array[String] = null
 
     if (queryText == "") {
@@ -220,7 +220,7 @@ class SearchActivity extends Activity {
 
   /** Prepare InputView based on the content of searchEntry. */
   def checkInput() {
-    val query = simplified2Traditional(searchEntry.getText().toString())
+    val query = simplified2Traditional2(searchEntry.getText().toString())
     val input = nextCharacter(query)
 
     def showCandidates() {
@@ -299,7 +299,7 @@ class SearchActivity extends Activity {
 
   private def normalizeChinese(s: String) =
     if (displaySimplified && (s != "乾")) {
-      traditional2Simplified(s)
+      traditional2Simplified2(s)
     } else s
 
   private val historyPreference = "histrory_preference"
@@ -316,7 +316,7 @@ class SearchActivity extends Activity {
   /** Update the history with the new input string `s`. Oldest item is
     * at the beginning. */
   private def updateHistory(s: String) {
-    val t = simplified2Traditional(s)
+    val t = simplified2Traditional2(s)
     var history = collection.mutable.ArrayBuffer[String]() ++= getHistory()
     if (!history.exists(_.startsWith(t))) {
       val i = history.indexWhere(t.startsWith(_))
