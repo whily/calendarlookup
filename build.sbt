@@ -11,7 +11,7 @@ libraryDependencies ++= Seq(
   "org.scalatest" %% "scalatest" % "2.2.0" % "test",
   "net.whily" %% "scasci" % "0.0.1-SNAPSHOT",
   "net.whily" %% "scaland" % "0.0.1-SNAPSHOT",
-  "net.whily" %% "chinesecalendar" % "0.1.1-SNAPSHOT")
+  "net.whily" %% "chinesecalendar" % "0.2.0-SNAPSHOT")
 
 platformTarget in Android := "android-21"
 
@@ -25,7 +25,7 @@ proguardOptions in Android ++= Seq(
   "-dontwarn scala.collection.**",
   "-dontwarn sun.misc.Unsafe",
   "-keep class net.whily.android.calendarlookup.** { *; }",
-  "-keep class net.whily.android.chinesecalendar.** { *; }",  
+  "-keep class net.whily.android.chinesecalendar.** { *; }",
   "-keep class scala.collection.SeqLike { public java.lang.String toString(); }")
 
 scalacOptions in Compile ++= Seq("-feature", "-deprecation", "-Xexperimental")
@@ -37,4 +37,3 @@ javacOptions in Compile  += "-deprecation"
 run <<= run in Android
 
 install <<= install in Android
-

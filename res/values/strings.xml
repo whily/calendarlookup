@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
   <string name="app_name">中西历查询</string>
-  
+
   <!--  SearchActivity -->
   <string name="settings">设置</string>
-  <string name="about">关于</string>  
+  <string name="about">关于</string>
   <string name="search_entry_hint">中历或西历年月日</string>
-  
+
   <!--  Activity Settings -->
-  <string name="app_name_ver">中西历查询 v0.1.1</string>
+  <string name="app_name_ver">中西历查询 v0.2.0</string>
   <string name="app_more_info">Copyright © 2015 Yujian Zhang\n使用GNU GPL v2许可证\n点此访问GitHub源码"</string>
 
   <string name="appearance_preference">显示</string>
@@ -19,8 +19,8 @@
     <item>浅色</item>
   </string-array>
   <string-array name="theme_values_preference">
-    <item>0</item> 
-    <item>1</item> 
+    <item>0</item>
+    <item>1</item>
   </string-array>
   <string name="chinese_title_preference">中文显示</string>
   <string name="chinese_dialog_title_preference">中文显示</string>
@@ -29,7 +29,7 @@
     <item>繁体中文</item>
   </string-array>
   <string-array name="chinese_values_preference">
-    <item>simplified</item> 
-    <item>traditional</item> 
+    <item>simplified</item>
+    <item>traditional</item>
   </string-array>
 </resources>

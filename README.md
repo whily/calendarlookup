@@ -5,7 +5,7 @@ Calendar Lookup is An Android app to convert between historical Chinese
 calendar and Julian/Gregorian calendar.  It is currently under
 development and is expected to have following features:
 
-* Years supported: BCE 251 to CE 907.
+* Years supported: BCE 841 to CE 1911.
 * Accurate to date.
 * Support both traditional/simplified Chinese input/display
 
@@ -23,9 +23,9 @@ Development
 
 The following tools are needed to build Calendar Lookup from source:
 
-* JDK version 6/7 from <http://www.java.com> if Java is not available. 
+* JDK version 6/7 from <http://www.java.com> if Java is not available.
   Note that JDK is preinstalled on Mac OS X and available via package manager
-  on many Linux systems. 
+  on many Linux systems.
 * Android SDK r23.0.5.
 * Scala (2.11.6)
 * sbt (0.13.8)
@@ -50,6 +50,3 @@ To compile/run the code, run the following command to build the
    app and start it in a connected device:
 
         $ sbt android:run
-
-
-
