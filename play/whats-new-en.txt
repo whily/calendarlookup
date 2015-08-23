@@ -1,0 +1,8 @@
+<b>v0.2.0</b>
+- Add data for BCE 841 to 252, and CE 908 to 1911.
+
+<b>v0.1.1</b>
+- Add data for CE 703 to 907.
+
+<b>v0.1.0</b>
+- Initial version.
