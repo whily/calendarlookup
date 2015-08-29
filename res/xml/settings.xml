@@ -27,7 +27,7 @@
         android:entryValues="@array/chinese_values_preference"
         android:dialogTitle="@string/chinese_dialog_title_preference"
         android:persistent="true" 
-        android:defaultValue="0"
+        android:defaultValue="simplified"
         android:shouldDisableView="false" />         
   </PreferenceCategory>
 </PreferenceScreen>
