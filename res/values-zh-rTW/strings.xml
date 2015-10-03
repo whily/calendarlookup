@@ -3,6 +3,7 @@
   <string name="app_name">中西曆查詢</string>
 
   <!--  SearchActivity -->
+  <string name="today">今天</string>
   <string name="settings">設置</string>
   <string name="about">關於</string>
   <string name="search_entry_hint">中歷或西曆年月日</string>

@@ -23,7 +23,7 @@ import android.view.inputmethod.InputMethodManager
 import android.util.{Log, TypedValue}
 import android.widget.{AdapterView, ArrayAdapter, AutoCompleteTextView, Button, TextView}
 import net.whily.scaland.{ExceptionHandler, Util}
-import net.whily.chinesecalendar.ChineseCalendar
+import net.whily.chinesecalendar.{ChineseCalendar, JulianGregorianCalendar}
 import net.whily.chinesecalendar.ChineseCalendar._
 import net.whily.chinesecalendar.Chinese._
 
@@ -70,6 +70,10 @@ class SearchActivity extends Activity {
 
   override def onOptionsItemSelected(item: MenuItem): Boolean = {
     item.getItemId match {
+      case R.id.today =>
+        searchEntry.setText(JulianGregorianCalendar.currentDate().toString)
+        true
+
       case android.R.id.home | R.id.settings =>
         startActivityForResult(new Intent(this, classOf[SettingsActivity]), ResultSettings)
         true
