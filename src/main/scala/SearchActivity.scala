@@ -98,6 +98,7 @@ class SearchActivity extends Activity {
     for (altCalendarButton <- altCalendarButtons) {
       altCalendarButton.setOnClickListener(new View.OnClickListener() {
         override def onClick(v: View) {
+          dimSearchTextColor()
           queryAndShowSafe(altCalendarButton.getText().toString(), true)
         }
       })
