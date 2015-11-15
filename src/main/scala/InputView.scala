@@ -39,7 +39,7 @@ class InputView(context: Context, attrs: AttributeSet) extends View(context, att
   paint.setStyle(Paint.Style.STROKE)
   paint.setTextSize(inputTextSizePx)
 
-  private val gridWidth = paint.measureText("一二")
+  private val gridWidth = paint.measureText("一二3")
   private val gridHeight = inputTextSizePx * 2
 
   private var left = 0.0f
@@ -48,7 +48,7 @@ class InputView(context: Context, attrs: AttributeSet) extends View(context, att
   private var bottom = 0.0f
 
   private var itemsPerRow = 0
-  private var rows = 0  
+  private var rows = 0
 
   override def onTouchEvent(event: MotionEvent): Boolean = {
     gestureDetector.onTouchEvent(event)
@@ -65,7 +65,7 @@ class InputView(context: Context, attrs: AttributeSet) extends View(context, att
   }
 
   // Calculate measures to determin the width/height of the view.
-  private def calculateMeasure(width: Int) { 
+  private def calculateMeasure(width: Int) {
     itemsPerRow = Math.floor(width * 1.0 / gridWidth).toInt
     right = width
     if (candidates != null) {
@@ -172,9 +172,9 @@ class InputView(context: Context, attrs: AttributeSet) extends View(context, att
       pressIndex(event) match {
         case Some(index) =>
           val selectedInput = candidates(index)
-          searchActivity.addInput(selectedInput)          
+          searchActivity.addInput(selectedInput)
         case None =>
-      }    
+      }
     }
 
     override def onSingleTapConfirmed(event: MotionEvent): Boolean = {
@@ -192,7 +192,7 @@ class InputView(context: Context, attrs: AttributeSet) extends View(context, att
           selectedIndex = index
           invalidate()
         case None =>
-      }      
+      }
     }
 
     override def onFling(e1: MotionEvent, e2: MotionEvent, velocityX: Float, velocityY: Float): Boolean = {
@@ -205,5 +205,5 @@ class InputView(context: Context, attrs: AttributeSet) extends View(context, att
 
       true
     }
-  }  
+  }
 }
