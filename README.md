@@ -50,3 +50,7 @@ To compile/run the code, run the following command to build the
    app and start it in a connected device:
 
         $ sbt android:run
+
+To build a release version and start it in a connected device:
+
+        $ sbt android:set-release android:run
