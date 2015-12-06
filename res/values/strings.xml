@@ -9,7 +9,7 @@
   <string name="search_entry_hint">中历或西历年月日</string>
 
   <!--  Activity Settings -->
-  <string name="app_name_ver">中西历查询 v0.2.0</string>
+  <string name="app_name_ver">中西历查询 v0.2.1</string>
   <string name="app_more_info">Copyright © 2015 Yujian Zhang\n使用GNU GPL v2许可证\n点此访问GitHub源码"</string>
 
   <string name="appearance_preference">显示</string>
