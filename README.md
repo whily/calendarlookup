@@ -7,6 +7,9 @@ calendar and Julian/Gregorian calendar.
 Android app can be downloaded from Goolge Play:
   <https://play.google.com/store/apps/details?id=net.whily.android.calendarlookup>
 
+Latest version of APK can be downloaded from:
+  <https://github.com/whily/calendarlookup/releases/download/v0.2.1/calendarlookup-v0.2.1.apk>
+
 One can also find the features of the app in the above link.
 
 For more information about Calendar Lookup, please go to
