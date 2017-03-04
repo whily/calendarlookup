@@ -166,7 +166,9 @@ class MonthView(context: Context, attrs: AttributeSet) extends View(context, att
     // Draw the outline of month view.
     paint.setColor(barColor)
     paint.setStyle(Paint.Style.STROKE)
-    canvas.drawRect(left, top, left + viewWidth, viewHeight, paint)
+    // It seems that the bottome line is not shown in some cases if viewHeight is used.
+    // WORKAROUND: use viewHeight - 2 instead.
+    canvas.drawRect(left, top, left + viewWidth, viewHeight - 2, paint)
 
     val leftOffset = - gridWidth / 9
     val topOffset = - gridHeight * 7 / 10
