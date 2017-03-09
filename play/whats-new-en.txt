@@ -1,3 +1,6 @@
+<b>v0.2.2</b>
+- Correction to show Zai for eras Tianbao and Zhide.
+
 <b>v0.2.1</b>
 - Add data for CE 1912 to 2100.
 - Significantly reduce app launch latency.
