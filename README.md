@@ -1,16 +1,16 @@
 Calendar Lookup
 ===============
 
-Calendar Lookup is n Android app to convert between historical Chinese
+Calendar Lookup is an Android app to convert between historical Chinese
 calendar and Julian/Gregorian calendar.
 
 Android app can be downloaded from Goolge Play:
   <https://play.google.com/store/apps/details?id=net.whily.android.calendarlookup>
 
-Latest version of APK can be downloaded from:
-  <https://github.com/whily/calendarlookup/releases/download/v0.2.1/calendarlookup-v0.2.1.apk>
+Features of the app can be found in the above link.
 
-One can also find the features of the app in the above link.
+Latest version of APK can be also downloaded from:
+  <https://github.com/whily/calendarlookup/releases/download/v0.2.1/calendarlookup-v0.2.1.apk>
 
 For more information about Calendar Lookup, please go to
   <https://github.com/whily/calendarlookup>
